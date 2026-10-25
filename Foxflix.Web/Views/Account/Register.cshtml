@@ -1,0 +1,142 @@
+﻿@model Foxflix.Web.Controllers.AccountController.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Create Account";
+    Layout = "_Layout";
+}
+
+<div class="register-page">
+    <div class="register-background"></div>
+    <div class="register-overlay"></div>
+
+    <div class="register-container">
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="register-logo">
+            FOX<span>FLIX</span>
+        </a>
+
+        <div class="register-card">
+            <div class="register-heading">
+                <span class="register-label">YOUR NEXT STORY STARTS HERE</span>
+                <h1>Create account</h1>
+                <p>One account. Endless stories.</p>
+            </div>
+
+            <form asp-controller="Account"
+                  asp-action="Register"
+                  method="post"
+                  class="register-form">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="register-validation-summary">
+                </div>
+
+                <div class="register-field">
+                    <label asp-for="Email">Email address</label>
+
+                    <div class="register-input-wrapper">
+                        <span class="register-input-icon">✉</span>
+
+                        <input asp-for="Email"
+                               type="email"
+                               autocomplete="email"
+                               placeholder="you@example.com" />
+                    </div>
+
+                    <span asp-validation-for="Email"
+                          class="register-error">
+                    </span>
+                </div>
+
+                <div class="register-field">
+                    <label asp-for="Password">Password</label>
+
+                    <div class="register-input-wrapper">
+                        <span class="register-input-icon">◆</span>
+
+                        <input asp-for="Password"
+                               type="password"
+                               autocomplete="new-password"
+                               placeholder="Create a strong password" />
+                    </div>
+
+                    <span asp-validation-for="Password"
+                          class="register-error">
+                    </span>
+
+                    <span class="register-hint">
+                        Use at least 6 characters.
+                    </span>
+                </div>
+
+                <div class="register-field">
+                    <label asp-for="ConfirmPassword">
+                        Confirm password
+                    </label>
+
+                    <div class="register-input-wrapper">
+                        <span class="register-input-icon">✓</span>
+
+                        <input asp-for="ConfirmPassword"
+                               type="password"
+                               autocomplete="new-password"
+                               placeholder="Enter your password again" />
+                    </div>
+
+                    <span asp-validation-for="ConfirmPassword"
+                          class="register-error">
+                    </span>
+                </div>
+
+                <button type="submit" class="register-submit">
+                    <span>Create your account</span>
+                    <span class="register-arrow">→</span>
+                </button>
+
+                <p class="register-terms">
+                    By creating an account, you agree to use Foxflix
+                    responsibly.
+                </p>
+            </form>
+
+            <div class="register-divider">
+                <span></span>
+                <span>ALREADY A MEMBER?</span>
+                <span></span>
+            </div>
+
+            <a asp-controller="Account"
+               asp-action="Login"
+               class="register-login">
+                Sign in to Foxflix
+                <span>→</span>
+            </a>
+        </div>
+
+        <div class="register-bottom">
+            <span class="register-status-dot"></span>
+            YOUR ENTERTAINMENT. YOUR WORLD.
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.querySelectorAll(".register-input-wrapper input")
+            .forEach(input => {
+                const wrapper = input.closest(".register-input-wrapper");
+
+                function updateState() {
+                    wrapper.classList.toggle("has-value", input.value.length > 0);
+                }
+
+                input.addEventListener("input", updateState);
+                updateState();
+            });
+    </script>
+}

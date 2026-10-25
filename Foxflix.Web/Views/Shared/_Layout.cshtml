@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Foxflix</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/foxflix.css" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+<body>
+
+    <header class="foxflix-header">
+        <div class="foxflix-container">
+
+            <a class="foxflix-logo"
+               asp-controller="Home"
+               asp-action="Index">
+                FOXFLIX
+            </a>
+
+            <nav class="foxflix-nav">
+
+                <a asp-controller="Home"
+                   asp-action="Index">
+                    Головна
+                </a>
+
+                <a asp-controller="Catalog"
+                   asp-action="Index">
+                    Каталог
+                </a>
+
+                <a asp-controller="Series"
+                   asp-action="Index">
+                    Серіали
+                </a>
+
+                <a asp-controller="Home"
+                   asp-action="MyList">
+                    Мій список
+                </a>
+
+            </nav>
+
+            <div class="foxflix-actions">
+
+              <div class="foxflix-search-wrapper">
+    <button type="button"
+            class="foxflix-search"
+            id="foxflixSearchToggle"
+            aria-label="Відкрити пошук"
+            aria-expanded="false">
+
+        <span class="foxflix-search-icon"></span>
+    </button>
+
+    <form asp-controller="Search"
+          asp-action="Index"
+          method="get"
+          class="foxflix-search-form"
+          id="foxflixSearchForm">
+
+        <input type="search"
+               name="query"
+               id="foxflixSearchInput"
+               placeholder="Назва фільму..."
+               aria-label="Назва фільму"
+               autocomplete="off" />
+
+        <button type="submit" aria-label="Знайти">
+            Знайти
+        </button>
+    </form>
+</div>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Profile"
+                       asp-action="Index"
+                       class="foxflix-profile">
+
+                        <span class="foxflix-avatar">
+                            @(User.Identity.Name?.FirstOrDefault().ToString().ToUpper() ?? "U")
+                        </span>
+
+                        <span class="foxflix-profile-name">
+                            @User.Identity.Name
+                        </span>
+
+                    </a>
+
+                    <form asp-controller="Account"
+      asp-action="Logout"
+      method="post"
+      class="foxflix-logout-form">
+
+    @Html.AntiForgeryToken()
+
+    <button type="submit"
+            class="foxflix-logout-button">
+
+        <svg class="foxflix-logout-icon"
+             xmlns="http://www.w3.org/2000/svg"
+             width="17"
+             height="17"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.8"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
+
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+            <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+
+        </svg>
+
+        <span>Вийти</span>
+    </button>
+</form>
+                }
+                else
+                {
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="foxflix-button foxflix-button-secondary">
+                        Увійти
+                    </a>
+
+                    <a asp-controller="Account"
+                       asp-action="Register"
+                       class="foxflix-button foxflix-button-primary">
+                        Реєстрація
+                    </a>
+                }
+
+            </div>
+
+        </div>
+    </header>
+
+    <main class="foxflix-main">
+        @RenderBody()
+    </main>
+
+    <footer class="foxflix-footer">
+        <div class="foxflix-container">
+            <p>
+                © 2026 Foxflix Project
+            </p>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.getElementById("foxflixSearchToggle");
+        const form = document.getElementById("foxflixSearchForm");
+        const input = document.getElementById("foxflixSearchInput");
+
+        if (!toggle || !form || !input) {
+            return;
+        }
+
+        toggle.addEventListener("click", function () {
+            const isOpen = form.classList.toggle("is-open");
+
+            toggle.setAttribute("aria-expanded", String(isOpen));
+
+            if (isOpen) {
+                input.focus();
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                form.classList.remove("is-open");
+                toggle.setAttribute("aria-expanded", "false");
+            }
+        });
+    });
+</script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,518 @@
+﻿
+@model Foxflix.Web.Controllers.CatalogController.TmdbMovieDetailsDto
+
+@{
+    ViewData["Title"] = Model.Title;
+    var trailerKey = ViewBag.TrailerKey as string;
+    var posterUrl = Model.FullPosterUrl;
+    var backdropUrl = Model.FullBackdropUrl;
+}
+
+<section class="movie-details-page">
+    <div class="movie-backdrop"
+         style="@(string.IsNullOrWhiteSpace(backdropUrl) ? "" : $"background-image: url('{backdropUrl}');")">
+    </div>
+
+    <div class="movie-details-container">
+        <a asp-controller="Catalog"
+           asp-action="Index"
+           asp-route-source="tmdb"
+           class="back-link">← Назад до каталогу</a>
+
+        <div class="movie-hero">
+            <div class="movie-poster">
+                @if (!string.IsNullOrWhiteSpace(posterUrl))
+                {
+                    <img src="@posterUrl" alt="@Model.Title" />
+                }
+                else
+                {
+                    <div class="poster-placeholder">FOXFLIX</div>
+                }
+            </div>
+
+            <div class="movie-information">
+                <span class="movie-eyebrow">ОРИГІНАЛЬНИЙ ДОСВІД FOXFLIX</span>
+                <h1>@Model.Title</h1>
+
+                <div class="movie-meta">
+                    @if (!string.IsNullOrWhiteSpace(Model.ReleaseDate))
+                    {
+                        <span>
+                            Дата виходу: @Model.ReleaseDate
+                        </span>
+                    }
+
+                    <span class="movie-rating">
+                        ★ @Model.VoteAverage.ToString("0.0") / 10
+                    </span>
+                </div>
+
+                <p class="movie-overview">
+                    @(string.IsNullOrWhiteSpace(Model.Overview)
+                        ? "Опис цього фільму поки що відсутній."
+                        : Model.Overview)
+                </p>
+
+                <div class="movie-buttons">
+                    @if (!string.IsNullOrWhiteSpace(trailerKey))
+                    {
+                        <button type="button"
+                                class="watch-trailer-button"
+                                onclick="openTrailer()">
+                            <span>▶</span> Дивитися трейлер
+                        </button>
+                    }
+
+                    <a asp-controller="Catalog"
+                       asp-action="Index"
+                       asp-route-source="tmdb"
+                       class="catalog-button">
+                        Інші фільми
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <section class="similar-section">
+            <div class="similar-heading">
+                <div>
+                    <span class="movie-eyebrow">ВІДКРИВАЙ БІЛЬШЕ</span>
+                    <h2>Продовжуй досліджувати</h2>
+                </div>
+
+                <a asp-controller="Catalog"
+                   asp-action="Index"
+                   asp-route-source="tmdb">Увесь каталог →</a>
+            </div>
+
+            <div class="similar-grid">
+                <a asp-controller="Catalog"
+                   asp-action="Index"
+                   asp-route-source="tmdb"
+                   class="similar-card">
+                    <div class="similar-icon">✦</div>
+                    <h3>Популярні фільми</h3>
+                    <p>Відкривай фільми, які зараз дивляться глядачі.</p>
+                    <span>Дослідити →</span>
+                </a>
+
+                <a asp-controller="Catalog"
+                   asp-action="Index"
+                   asp-route-source="tmdb"
+                   asp-route-sortBy="primary_release_date.desc"
+                   class="similar-card">
+                    <div class="similar-icon">◷</div>
+                    <h3>Нові прем'єри</h3>
+                    <p>Знаходь нові релізи та нещодавні прем'єри.</p>
+                    <span>Переглянути новинки →</span>
+                </a>
+
+                <a asp-controller="Catalog"
+                   asp-action="Index"
+                   asp-route-source="tmdb"
+                   asp-route-sortBy="vote_average.desc"
+                   class="similar-card">
+                    <div class="similar-icon">★</div>
+                    <h3>Високий рейтинг</h3>
+                    <p>Обирай фільми з високими оцінками глядачів.</p>
+                    <span>Знайти найкращі →</span>
+                </a>
+            </div>
+        </section>
+    </div>
+</section>
+
+@if (!string.IsNullOrWhiteSpace(trailerKey))
+{
+    <div class="trailer-modal" id="trailerModal" aria-hidden="true">
+        <div class="trailer-dialog">
+            <button type="button"
+                    class="trailer-close"
+                    onclick="closeTrailer()"
+                    aria-label="Закрити трейлер">×</button>
+
+            <div class="trailer-frame">
+                <iframe id="trailerFrame"
+                        title="Трейлер фільму"
+                        src=""
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .movie-details-page {
+        position: relative;
+        min-height: 100vh;
+        padding: 32px 0 80px;
+        overflow: hidden;
+        background: #080808;
+        color: #f5f5f5;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .movie-backdrop {
+        position: absolute;
+        inset: 0 0 auto;
+        height: 650px;
+        background-position: center 25%;
+        background-size: cover;
+        opacity: .2;
+        -webkit-mask-image: linear-gradient(to bottom, black, transparent 90%);
+        mask-image: linear-gradient(to bottom, black, transparent 90%);
+        pointer-events: none;
+    }
+
+    .movie-details-container {
+        position: relative;
+        width: min(1240px, calc(100% - 40px));
+        margin: 0 auto;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 38px;
+        color: #c1c1c1;
+        font-size: 14px;
+        text-decoration: none;
+        transition: color .2s ease;
+    }
+
+    .back-link:hover {
+        color: #ff333d;
+    }
+
+    .movie-hero {
+        display: grid;
+        grid-template-columns: minmax(220px, 340px) minmax(0, 1fr);
+        gap: clamp(30px, 6vw, 75px);
+        align-items: center;
+    }
+
+    .movie-poster {
+        overflow: hidden;
+        aspect-ratio: 2 / 3;
+        background: #151515;
+        border: 1px solid #333;
+        border-radius: 10px;
+        box-shadow: 0 25px 80px #000b;
+    }
+
+    .movie-poster img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .poster-placeholder {
+        display: grid;
+        height: 100%;
+        place-items: center;
+        color: #e50914;
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: 5px;
+    }
+
+    .movie-eyebrow {
+        color: #ff303a;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 2px;
+    }
+
+    .movie-information h1 {
+        margin: 15px 0 20px;
+        font-size: clamp(32px, 4vw, 56px);
+        line-height: 1.1;
+        letter-spacing: -1px;
+        overflow-wrap: anywhere;
+    }
+
+    .movie-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        color: #b5b5b5;
+        font-size: 14px;
+    }
+
+    .movie-rating {
+        color: #ff555d;
+        font-weight: 800;
+    }
+
+    .movie-overview {
+        max-width: 680px;
+        margin: 25px 0;
+        color: #c1c1c1;
+        font-size: 16px;
+        line-height: 1.8;
+    }
+
+    .movie-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .watch-trailer-button,
+    .catalog-button {
+        display: inline-flex;
+        min-height: 46px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 20px;
+        border: 1px solid #444;
+        border-radius: 7px;
+        color: white;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+
+    .watch-trailer-button {
+        background: #e50914;
+        border-color: #e50914;
+    }
+
+    .watch-trailer-button:hover {
+        transform: translateY(-2px);
+        background: #b20710;
+        border-color: #b20710;
+    }
+
+    .catalog-button {
+        background: #181818;
+    }
+
+    .catalog-button:hover {
+        border-color: #e50914;
+        background: #241011;
+        color: white;
+    }
+
+    .similar-section {
+        margin-top: 90px;
+    }
+
+    .similar-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .similar-heading h2 {
+        margin: 10px 0 0;
+        font-size: clamp(24px, 3vw, 34px);
+        line-height: 1.2;
+    }
+
+    .similar-heading > a {
+        color: #ff5159;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .similar-heading > a:hover {
+        color: #ff858b;
+    }
+
+    .similar-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .similar-card {
+        padding: 25px;
+        background: linear-gradient(145deg, #191111, #101010);
+        border: 1px solid #302426;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: transform .2s ease, border-color .2s ease;
+    }
+
+    .similar-card:hover {
+        transform: translateY(-4px);
+        border-color: #e50914;
+    }
+
+    .similar-icon {
+        color: #ff303a;
+        font-size: 26px;
+    }
+
+    .similar-card h3 {
+        margin: 18px 0 10px;
+        color: white;
+        font-size: 18px;
+        line-height: 1.4;
+    }
+
+    .similar-card p {
+        min-height: 48px;
+        color: #a5a5a5;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .similar-card > span {
+        display: inline-block;
+        margin-top: 10px;
+        color: #ff5159;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .trailer-modal {
+        position: fixed;
+        z-index: 9999;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, .94);
+    }
+
+    .trailer-modal.is-open {
+        display: flex;
+    }
+
+    .trailer-dialog {
+        position: relative;
+        width: min(1000px, 100%);
+    }
+
+    .trailer-frame {
+        overflow: hidden;
+        aspect-ratio: 16 / 9;
+        background: black;
+        border: 1px solid #333;
+        border-radius: 10px;
+    }
+
+    .trailer-frame iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .trailer-close {
+        position: absolute;
+        z-index: 2;
+        top: -45px;
+        right: 0;
+        width: 38px;
+        height: 38px;
+        color: white;
+        background: #1c1c1c;
+        border: 1px solid #444;
+        border-radius: 50%;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    .trailer-close:hover {
+        background: #e50914;
+        border-color: #e50914;
+    }
+
+    @@media (max-width: 720px) {
+        .movie-hero {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 28px;
+        }
+
+        .movie-poster {
+            width: min(270px, 80%);
+        }
+
+        .similar-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .similar-section {
+            margin-top: 60px;
+        }
+
+        .movie-information h1 {
+            letter-spacing: -.5px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .movie-details-container {
+            width: calc(100% - 28px);
+        }
+
+        .similar-heading {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .movie-buttons > * {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    function openTrailer() {
+        const modal = document.getElementById("trailerModal");
+        const frame = document.getElementById("trailerFrame");
+
+        if (!modal || !frame) return;
+
+        const trailerKey = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(trailerKey));
+
+        if (!trailerKey) return;
+
+        frame.src =
+            "https://www.youtube-nocookie.com/embed/" +
+            encodeURIComponent(trailerKey) +
+            "?autoplay=1";
+
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeTrailer() {
+        const modal = document.getElementById("trailerModal");
+        const frame = document.getElementById("trailerFrame");
+
+        if (!modal || !frame) return;
+
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        frame.src = "";
+        document.body.style.overflow = "";
+    }
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeTrailer();
+        }
+    });
+
+    document.getElementById("trailerModal")?.addEventListener("click", function (event) {
+        if (event.target === this) {
+            closeTrailer();
+        }
+    });
+</script>

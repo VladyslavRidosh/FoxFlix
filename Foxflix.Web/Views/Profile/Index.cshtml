@@ -1,0 +1,1046 @@
+﻿
+@{
+    ViewData["Title"] = "Мій профіль";
+
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+
+    var email = User.FindFirst(
+        System.Security.Claims.ClaimTypes.Email)?.Value ?? "";
+
+    var userName = User.Identity?.Name ?? "";
+
+    if (string.IsNullOrWhiteSpace(userName))
+    {
+        userName = User.FindFirst(
+            System.Security.Claims.ClaimTypes.GivenName)?.Value ?? "";
+    }
+
+    var displayName = !string.IsNullOrWhiteSpace(userName)
+        ? userName
+        : !string.IsNullOrWhiteSpace(email)
+            ? email
+            : "Гість";
+
+    var avatarSource = !string.IsNullOrWhiteSpace(displayName)
+        ? displayName.Trim()
+        : "F";
+
+    var avatarLetter = avatarSource.Substring(0, 1).ToUpperInvariant();
+
+    var registered = isAuthenticated;
+}
+
+<section class="profile-page">
+    <div class="profile-container">
+
+        <div class="profile-heading">
+            <div>
+                <span class="profile-eyebrow">FOXFLIX ACCOUNT</span>
+                <h1>Мій профіль<span>.</span></h1>
+                <p>Керуйте своїм акаунтом і переглядом.</p>
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="profile-back">
+                <span>←</span> На головну
+            </a>
+        </div>
+
+        <div class="profile-grid">
+
+            <aside class="profile-sidebar">
+
+                <div class="profile-user-card">
+                    <div class="profile-avatar">
+                        @avatarLetter
+                        <span class="profile-online"></span>
+                    </div>
+
+                    <div class="profile-user-info">
+                        <span class="profile-small-label">ВАШ АКАУНТ</span>
+
+                        <h2>@displayName</h2>
+
+                        @if (!string.IsNullOrWhiteSpace(email))
+                        {
+                            <p>@email</p>
+                        }
+                        else
+                        {
+                            <p>Обліковий запис Foxflix</p>
+                        }
+                    </div>
+
+                    <div class="profile-status">
+                        <span class="profile-status-dot"></span>
+                        @(registered ? "Ви увійшли в акаунт" : "Не авторизовано")
+                    </div>
+                </div>
+
+                <nav class="profile-navigation">
+                    <span class="profile-nav-heading">ОБЛІКОВИЙ ЗАПИС</span>
+
+                    <a asp-controller="Profile"
+                       asp-action="Index"
+                       class="profile-nav-link active">
+                        <span class="profile-nav-icon">◉</span>
+                        <span>Мій профіль</span>
+                        <span class="profile-nav-arrow">›</span>
+                    </a>
+
+                    <a asp-controller="Home"
+                       asp-action="MyList"
+                       class="profile-nav-link">
+                        <span class="profile-nav-icon">♡</span>
+                        <span>Мій список</span>
+                        <span class="profile-nav-arrow">›</span>
+                    </a>
+
+                    <div class="profile-nav-link profile-nav-disabled">
+                        <span class="profile-nav-icon">◷</span>
+                        <span>Історія перегляду</span>
+                        <span class="profile-soon">СКОРО</span>
+                    </div>
+
+                    <span class="profile-nav-heading profile-nav-heading-bottom">
+                        НАЛАШТУВАННЯ
+                    </span>
+
+                    <div class="profile-nav-link profile-nav-disabled">
+                        <span class="profile-nav-icon">⚙</span>
+                        <span>Налаштування</span>
+                        <span class="profile-soon">СКОРО</span>
+                    </div>
+                </nav>
+
+                @if (isAuthenticated)
+                {
+                    <form asp-controller="Account"
+                          asp-action="Logout"
+                          method="post"
+                          class="profile-logout-form">
+
+                        <button type="submit" class="profile-logout">
+                            <span>↪</span>
+                            Вийти з акаунта
+                        </button>
+                    </form>
+                }
+            </aside>
+
+            <main class="profile-main">
+
+                <div class="profile-welcome">
+                    <div class="profile-welcome-content">
+                        <span class="profile-eyebrow">ВАШ FOXFLIX</span>
+
+                        <h2>
+                            Радий бачити<br />
+                            <span>@(registered ? displayName : "тебе")</span>
+                        </h2>
+
+                        <p>
+                            Улюблені фільми, нові відкриття та вечори
+                            з хорошим кіно — усе починається тут.
+                        </p>
+
+                        <a asp-controller="Home"
+                           asp-action="MyList"
+                           class="profile-primary-button">
+                            Відкрити мій список
+                            <span>→</span>
+                        </a>
+                    </div>
+
+                    <div class="profile-decoration" aria-hidden="true">
+                        <div class="profile-decoration-ring ring-one"></div>
+                        <div class="profile-decoration-ring ring-two"></div>
+                        <div class="profile-decoration-play">▶</div>
+                        <div class="profile-decoration-glow"></div>
+                    </div>
+
+                    <div class="profile-welcome-bottom">
+                        <span>FOXFLIX</span>
+                        <span>YOUR NEXT FAVORITE STORY</span>
+                    </div>
+                </div>
+
+                <div class="profile-section-heading">
+                    <div>
+                        <span class="profile-eyebrow">PERSONAL SPACE</span>
+                        <h2>Інформація акаунта</h2>
+                    </div>
+
+                    <span class="profile-secure-badge">
+                        <span>●</span> Account
+                    </span>
+                </div>
+
+                <div class="profile-details-grid">
+
+                    <article class="profile-detail-card">
+                        <div class="profile-detail-icon">◎</div>
+
+                        <div class="profile-detail-text">
+                            <span>ІМ'Я КОРИСТУВАЧА</span>
+                            <strong>
+                                @(registered ? displayName : "Не визначено")
+                            </strong>
+                        </div>
+
+                        <span class="profile-detail-indicator"></span>
+                    </article>
+
+                    <article class="profile-detail-card">
+                        <div class="profile-detail-icon">✉</div>
+
+                        <div class="profile-detail-text">
+                            <span>ЕЛЕКТРОННА ПОШТА</span>
+                            <strong class="profile-email">
+                                @(string.IsNullOrWhiteSpace(email)
+                                    ? "Не вказана"
+                                    : email)
+                            </strong>
+                        </div>
+
+                        <span class="profile-detail-indicator"></span>
+                    </article>
+
+                    <article class="profile-detail-card">
+                        <div class="profile-detail-icon">♡</div>
+
+                        <div class="profile-detail-text">
+                            <span>ВАША КОЛЕКЦІЯ</span>
+                            <strong>Мій список</strong>
+                            <p>Збережені фільми та серіали</p>
+                        </div>
+
+                        <a asp-controller="Home"
+                           asp-action="MyList"
+                           class="profile-detail-action"
+                           aria-label="Відкрити мій список">→</a>
+                    </article>
+
+                    <article class="profile-detail-card">
+                        <div class="profile-detail-icon">◷</div>
+
+                        <div class="profile-detail-text">
+                            <span>ІСТОРІЯ</span>
+                            <strong>Історія перегляду</strong>
+                            <p>Функція буде доступна пізніше</p>
+                        </div>
+
+                        <span class="profile-coming-soon">СКОРО</span>
+                    </article>
+
+                </div>
+
+                <div class="profile-security-note">
+                    <div class="profile-security-icon">✓</div>
+
+                    <div>
+                        <strong>Ваш акаунт Foxflix</strong>
+                        <p>
+                            Інформація відображається з поточного
+                            облікового запису, якщо відповідні дані доступні.
+                        </p>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <footer class="profile-footer">
+            <span>FOXFLIX <span class="profile-footer-dot">●</span></span>
+            <span>ТВОЯ ІСТОРІЯ ПОЧИНАЄТЬСЯ ТУТ</span>
+        </footer>
+
+    </div>
+</section>
+
+<style>
+    .profile-page {
+        min-height: 100vh;
+        padding: 54px 28px 38px;
+        background:
+            radial-gradient(ellipse at 85% 0%, rgba(229, 9, 20, .09), transparent 32%),
+            #080808;
+        color: #f5f5f5;
+    }
+
+    .profile-container {
+        width: 100%;
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .profile-page * {
+        box-sizing: border-box;
+    }
+
+    .profile-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 34px;
+    }
+
+    .profile-eyebrow {
+        color: #e50914;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 2.5px;
+    }
+
+    .profile-heading h1 {
+        margin: 12px 0 8px;
+        font-size: clamp(32px, 4vw, 46px);
+        line-height: 1.1;
+        font-weight: 800;
+        letter-spacing: -1.7px;
+    }
+
+    .profile-heading h1 > span {
+        color: #e50914;
+    }
+
+    .profile-heading p {
+        margin: 0;
+        color: #888;
+        font-size: 14px;
+    }
+
+    .profile-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border: 1px solid #292929;
+        border-radius: 9px;
+        color: #ddd;
+        text-decoration: none;
+        font-size: 13px;
+        transition: .2s ease;
+        white-space: nowrap;
+    }
+
+    .profile-back:hover {
+        border-color: #e50914;
+        color: white;
+        background: rgba(229, 9, 20, .08);
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .profile-sidebar,
+    .profile-main {
+        min-width: 0;
+    }
+
+    .profile-sidebar {
+        overflow: hidden;
+        border: 1px solid #242424;
+        border-radius: 15px;
+        background: #101010;
+    }
+
+    .profile-user-card {
+        padding: 27px 23px 21px;
+        border-bottom: 1px solid #252525;
+    }
+
+    .profile-avatar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 76px;
+        height: 76px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 22px;
+        background: linear-gradient(145deg, #ef1723, #7b050c);
+        box-shadow: 0 10px 35px rgba(229, 9, 20, .2);
+        color: white;
+        font-size: 34px;
+        font-weight: 800;
+    }
+
+    .profile-online {
+        position: absolute;
+        right: -4px;
+        bottom: -4px;
+        width: 15px;
+        height: 15px;
+        border: 3px solid #101010;
+        border-radius: 50%;
+        background: #51d88a;
+    }
+
+    .profile-small-label {
+        color: #e50914;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.7px;
+    }
+
+    .profile-user-info h2 {
+        overflow-wrap: anywhere;
+        margin: 7px 0 6px;
+        font-size: 20px;
+        font-weight: 750;
+    }
+
+    .profile-user-info p {
+        overflow-wrap: anywhere;
+        margin: 0;
+        color: #858585;
+        font-size: 12px;
+    }
+
+    .profile-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 19px;
+        padding: 10px 11px;
+        border: 1px solid #262626;
+        border-radius: 8px;
+        background: #151515;
+        color: #b7b7b7;
+        font-size: 11px;
+    }
+
+    .profile-status-dot {
+        width: 7px;
+        height: 7px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: #51d88a;
+        box-shadow: 0 0 10px rgba(81, 216, 138, .3);
+    }
+
+    .profile-navigation {
+        padding: 20px 12px 12px;
+    }
+
+    .profile-nav-heading {
+        display: block;
+        margin: 0 10px 12px;
+        color: #666;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+    }
+
+    .profile-nav-heading-bottom {
+        margin-top: 25px;
+    }
+
+    .profile-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 46px;
+        margin-bottom: 5px;
+        padding: 0 12px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        color: #b8b8b8;
+        text-decoration: none;
+        font-size: 12px;
+        transition: .2s ease;
+    }
+
+    .profile-nav-link:not(.profile-nav-disabled):hover {
+        border-color: #2d2d2d;
+        background: #181818;
+        color: white;
+    }
+
+    .profile-nav-link.active {
+        border-color: rgba(229, 9, 20, .2);
+        background: rgba(229, 9, 20, .09);
+        color: white;
+    }
+
+    .profile-nav-link.active .profile-nav-icon {
+        color: #ff303a;
+    }
+
+    .profile-nav-icon {
+        width: 20px;
+        color: #888;
+        font-size: 19px;
+        text-align: center;
+    }
+
+    .profile-nav-arrow {
+        margin-left: auto;
+        color: #e50914;
+        font-size: 21px;
+    }
+
+    .profile-nav-disabled {
+        cursor: default;
+        color: #666;
+    }
+
+    .profile-soon {
+        margin-left: auto;
+        color: #777;
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: .6px;
+    }
+
+    .profile-logout-form {
+        padding: 0 12px 16px;
+    }
+
+    .profile-logout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid #352020;
+        border-radius: 8px;
+        background: transparent;
+        color: #f07878;
+        font: inherit;
+        font-size: 12px;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+    .profile-logout:hover {
+        border-color: #e50914;
+        background: rgba(229, 9, 20, .09);
+        color: #fff;
+    }
+
+    .profile-main {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    .profile-welcome {
+        position: relative;
+        display: flex;
+        min-height: 320px;
+        overflow: hidden;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid #342020;
+        border-radius: 15px;
+        background:
+            radial-gradient(ellipse at 83% 45%, rgba(229, 9, 20, .2), transparent 35%),
+            linear-gradient(110deg, #191011 0%, #110d0e 54%, #180b0c 100%);
+    }
+
+    .profile-welcome-content {
+        position: relative;
+        z-index: 2;
+        max-width: 520px;
+        padding: 33px 34px 24px;
+    }
+
+    .profile-welcome h2 {
+        margin: 15px 0 12px;
+        font-size: clamp(27px, 3vw, 38px);
+        line-height: 1.15;
+        font-weight: 800;
+        letter-spacing: -1.1px;
+    }
+
+    .profile-welcome h2 span {
+        color: #ff303a;
+        overflow-wrap: anywhere;
+    }
+
+    .profile-welcome-content p {
+        max-width: 400px;
+        margin: 0 0 24px;
+        color: #aaa;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .profile-primary-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 20px;
+        padding: 13px 17px;
+        border: 1px solid #e50914;
+        border-radius: 8px;
+        background: #e50914;
+        color: white;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 750;
+        transition: .2s ease;
+    }
+
+    .profile-primary-button:hover {
+        transform: translateY(-2px);
+        border-color: #ff303a;
+        background: #ff303a;
+        color: white;
+        box-shadow: 0 7px 24px rgba(229, 9, 20, .2);
+    }
+
+    .profile-primary-button span {
+        font-size: 17px;
+    }
+
+    .profile-decoration {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 42%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .profile-decoration-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        aspect-ratio: 1;
+        border: 1px solid rgba(255, 80, 90, .18);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .ring-one {
+        width: 230px;
+        box-shadow: 0 0 70px rgba(229, 9, 20, .08);
+    }
+
+    .ring-two {
+        width: 170px;
+        border-color: rgba(255, 80, 90, .28);
+    }
+
+    .profile-decoration-play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 76px;
+        height: 76px;
+        padding-left: 5px;
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 23px;
+        background: linear-gradient(145deg, #ed1722, #8d0710);
+        box-shadow: 0 15px 45px rgba(229, 9, 20, .28);
+        color: white;
+        font-size: 24px;
+        transform: translate(-50%, -50%) rotate(-8deg);
+    }
+
+    .profile-decoration-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: rgba(229, 9, 20, .13);
+        filter: blur(45px);
+        transform: translate(-50%, -50%);
+    }
+
+    .profile-welcome-bottom {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 15px 24px;
+        border-top: 1px solid rgba(255,255,255,.07);
+        color: #696060;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+    }
+
+    .profile-welcome-bottom span:first-child {
+        color: #e50914;
+    }
+
+    .profile-section-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .profile-section-heading h2 {
+        margin: 8px 0 0;
+        font-size: 22px;
+        font-weight: 750;
+        letter-spacing: -.5px;
+    }
+
+    .profile-secure-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 10px;
+        border: 1px solid #292929;
+        border-radius: 7px;
+        color: #aaa;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .profile-secure-badge span {
+        color: #51d88a;
+        font-size: 8px;
+    }
+
+    .profile-details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .profile-detail-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        min-width: 0;
+        min-height: 108px;
+        padding: 17px 15px;
+        border: 1px solid #252525;
+        border-radius: 11px;
+        background: linear-gradient(145deg, #121212, #0e0e0e);
+        transition: .2s ease;
+    }
+
+    .profile-detail-card:hover {
+        border-color: #393030;
+        background: #141111;
+    }
+
+    .profile-detail-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        border: 1px solid #302020;
+        border-radius: 10px;
+        background: rgba(229, 9, 20, .08);
+        color: #f0444d;
+        font-size: 19px;
+    }
+
+    .profile-detail-text {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        min-width: 0;
+        padding-top: 2px;
+    }
+
+    .profile-detail-text > span {
+        color: #777;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    .profile-detail-text strong {
+        overflow-wrap: anywhere;
+        color: #eaeaea;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .profile-detail-text .profile-email {
+        font-size: 11px;
+    }
+
+    .profile-detail-text p {
+        margin: -2px 0 0;
+        color: #777;
+        font-size: 10px;
+        line-height: 1.5;
+    }
+
+    .profile-detail-indicator {
+        width: 6px;
+        height: 6px;
+        flex-shrink: 0;
+        margin: 5px 0 0 auto;
+        border-radius: 50%;
+        background: #51d88a;
+    }
+
+    .profile-detail-action {
+        align-self: center;
+        margin-left: auto;
+        color: #e50914;
+        text-decoration: none;
+        font-size: 21px;
+    }
+
+    .profile-coming-soon {
+        align-self: flex-start;
+        margin: auto 0 0 auto;
+        padding: 5px 7px;
+        border: 1px solid #2c2c2c;
+        border-radius: 5px;
+        color: #888;
+        font-size: 8px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .profile-security-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        padding: 18px;
+        border: 1px solid #252525;
+        border-radius: 11px;
+        background: #101010;
+    }
+
+    .profile-security-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        border: 1px solid rgba(81,216,138,.2);
+        border-radius: 9px;
+        background: rgba(81,216,138,.08);
+        color: #51d88a;
+    }
+
+    .profile-security-note strong {
+        color: #ddd;
+        font-size: 12px;
+    }
+
+    .profile-security-note p {
+        margin: 5px 0 0;
+        color: #818181;
+        font-size: 11px;
+        line-height: 1.7;
+    }
+
+    .profile-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #222;
+        color: #626262;
+        font-size: 9px;
+        font-weight: 750;
+        letter-spacing: 1.3px;
+    }
+
+    .profile-footer > span:first-child {
+        color: #ddd;
+    }
+
+    .profile-footer-dot {
+        padding-left: 4px;
+        color: #e50914;
+        font-size: 7px;
+    }
+
+    @@media (max-width: 1000px) {
+        .profile-grid {
+            grid-template-columns: 250px minmax(0, 1fr);
+            gap: 16px;
+        }
+
+        .profile-user-card {
+            padding: 22px 17px;
+        }
+
+        .profile-welcome-content {
+            padding: 27px 24px 20px;
+        }
+
+        .profile-decoration {
+            right: -35px;
+            opacity: .65;
+        }
+
+        .profile-details-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 700px) {
+        .profile-page {
+            padding: 30px 16px;
+        }
+
+        .profile-heading {
+            align-items: flex-start;
+        }
+
+        .profile-heading h1 {
+            font-size: 34px;
+        }
+
+        .profile-heading p {
+            max-width: 260px;
+            line-height: 1.6;
+        }
+
+        .profile-back {
+            padding: 10px;
+            font-size: 0;
+        }
+
+        .profile-back span {
+            font-size: 18px;
+        }
+
+        .profile-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .profile-sidebar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .profile-user-card {
+            display: grid;
+            grid-template-columns: 62px minmax(0, 1fr);
+            gap: 0 15px;
+            padding: 18px;
+        }
+
+        .profile-avatar {
+            grid-row: span 2;
+            width: 62px;
+            height: 62px;
+            margin: 0;
+            border-radius: 18px;
+            font-size: 27px;
+        }
+
+        .profile-user-info {
+            align-self: center;
+        }
+
+        .profile-user-info h2 {
+            font-size: 17px;
+        }
+
+        .profile-status {
+            grid-column: 1 / -1;
+        }
+
+        .profile-navigation {
+            padding-top: 17px;
+        }
+
+        .profile-logout-form {
+            padding-bottom: 14px;
+        }
+
+        .profile-welcome {
+            min-height: 300px;
+        }
+
+        .profile-welcome-content {
+            padding: 24px 20px;
+        }
+
+        .profile-welcome h2 {
+            font-size: 30px;
+        }
+
+        .profile-welcome-content p {
+            max-width: 310px;
+            font-size: 12px;
+        }
+
+        .profile-decoration {
+            top: 8px;
+            right: -90px;
+            width: 60%;
+            opacity: .35;
+        }
+
+        .ring-one {
+            width: 180px;
+        }
+
+        .ring-two {
+            width: 130px;
+        }
+
+        .profile-decoration-play {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+        }
+
+        .profile-welcome-bottom {
+            padding: 13px 16px;
+            font-size: 8px;
+        }
+
+        .profile-section-heading h2 {
+            font-size: 19px;
+        }
+
+        .profile-detail-card {
+            min-height: 96px;
+        }
+
+        .profile-footer {
+            flex-wrap: wrap;
+            line-height: 1.7;
+        }
+    }
+
+    @@media (max-width: 380px) {
+        .profile-page {
+            padding-right: 11px;
+            padding-left: 11px;
+        }
+
+        .profile-welcome h2 {
+            font-size: 27px;
+        }
+
+        .profile-welcome-bottom span:last-child {
+            max-width: 150px;
+            text-align: right;
+        }
+
+        .profile-secure-badge {
+            font-size: 9px;
+        }
+    }
+</style>
+

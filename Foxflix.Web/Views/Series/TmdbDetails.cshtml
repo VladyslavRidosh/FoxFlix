@@ -1,0 +1,371 @@
+﻿
+@model Foxflix.Web.Controllers.SeriesController.TmdbSeriesDetailsDto
+
+@{
+    ViewData["Title"] = Model.Name;
+
+    var year = DateTime.TryParse(Model.FirstAirDate, out var date)
+        ? date.Year.ToString()
+        : "Невідомо";
+
+    var backdrop = Model.BackdropUrl ?? Model.PosterUrl;
+    var overview = string.IsNullOrWhiteSpace(Model.Overview)
+        ? "Опис серіалу поки відсутній."
+        : Model.Overview;
+}
+
+<style>
+    .tmdb-details {
+        margin: -24px;
+        min-height: 100vh;
+        background: #090909;
+        color: #f5f5f5;
+    }
+
+    .details-hero {
+        position: relative;
+        min-height: 650px;
+        display: flex;
+        align-items: end;
+        padding: 70px 7%;
+        overflow: hidden;
+        background:
+            linear-gradient(90deg, #090909 0%, rgba(9,9,9,.88) 38%, rgba(9,9,9,.25) 100%),
+            linear-gradient(0deg, #090909 0%, transparent 65%),
+            url('@backdrop') center 25% / cover no-repeat;
+    }
+
+    .details-content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+    }
+
+    .details-kicker {
+        color: #e50914;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+    }
+
+    .details-title {
+        margin: 18px 0;
+        font-size: clamp(42px, 7vw, 86px);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -2px;
+    }
+
+    .details-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin: 25px 0;
+    }
+
+    .meta-chip {
+        padding: 9px 13px;
+        border: 1px solid #383838;
+        border-radius: 6px;
+        background: rgba(15,15,15,.75);
+        color: #ddd;
+        font-size: 13px;
+    }
+
+    .meta-rating {
+        color: #ffd166;
+        font-weight: 800;
+    }
+
+    .details-tagline {
+        margin: 0 0 14px;
+        color: #fff;
+        font-size: 19px;
+        font-style: italic;
+    }
+
+    .details-overview {
+        max-width: 700px;
+        color: #c6c6c6;
+        font-size: 16px;
+        line-height: 1.9;
+    }
+
+    .details-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .details-button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
+        min-height: 48px;
+        padding: 0 22px;
+        border: 1px solid #333;
+        border-radius: 7px;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 750;
+        transition: .2s ease;
+    }
+
+    .details-button-primary {
+        border-color: #e50914;
+        background: #e50914;
+    }
+
+    .details-button-primary:hover {
+        background: #bd0811;
+        color: #fff;
+    }
+
+    .details-button-secondary {
+        background: rgba(20,20,20,.85);
+    }
+
+    .details-button-secondary:hover {
+        border-color: #e50914;
+        color: #fff;
+    }
+
+    .details-body {
+        padding: 35px 7% 70px;
+    }
+
+    .details-section-title {
+        margin: 0 0 22px;
+        font-size: 25px;
+        font-weight: 850;
+    }
+
+    .details-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .details-stat {
+        padding: 23px;
+        border: 1px solid #292929;
+        border-radius: 12px;
+        background: linear-gradient(145deg, #171717, #101010);
+    }
+
+    .details-stat-label {
+        display: block;
+        margin-bottom: 12px;
+        color: #999;
+        font-size: 13px;
+    }
+
+    .details-stat-value {
+        font-size: 27px;
+        font-weight: 850;
+    }
+
+    .details-stat-note {
+        margin-top: 7px;
+        color: #777;
+        font-size: 12px;
+    }
+
+    .details-info {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(240px, .6fr);
+        gap: 35px;
+        margin-top: 45px;
+    }
+
+    .details-description {
+        color: #bcbcbc;
+        font-size: 15px;
+        line-height: 1.9;
+    }
+
+    .details-facts {
+        padding: 24px;
+        border: 1px solid #292929;
+        border-radius: 12px;
+        background: #111;
+    }
+
+    .details-fact {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 14px 0;
+        border-bottom: 1px solid #292929;
+        font-size: 13px;
+    }
+
+    .details-fact:last-child {
+        border-bottom: 0;
+    }
+
+    .details-fact span {
+        color: #888;
+    }
+
+    .details-fact strong {
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .details-back {
+        display: inline-block;
+        margin-top: 35px;
+        color: #aaa;
+        text-decoration: none;
+    }
+
+    .details-back:hover {
+        color: #fff;
+    }
+
+    @@media (max-width: 700px) {
+        .tmdb-details {
+            margin: -16px;
+        }
+
+        .details-hero {
+            min-height: 650px;
+            padding: 35px 6%;
+            background-position: center;
+        }
+
+        .details-title {
+            letter-spacing: -1px;
+        }
+
+        .details-overview {
+            font-size: 14px;
+        }
+
+        .details-body {
+            padding: 30px 6% 45px;
+        }
+
+        .details-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .details-info {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .details-actions {
+            flex-direction: column;
+        }
+
+        .details-button {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="tmdb-details">
+    <section class="details-hero">
+        <div class="details-content">
+            <div class="details-kicker">FOXFLIX · SERIES</div>
+
+            <h1 class="details-title">@Model.Name</h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Tagline))
+            {
+                <p class="details-tagline">@Model.Tagline</p>
+            }
+
+            <div class="details-meta">
+                <span class="meta-chip">@year</span>
+                <span class="meta-chip meta-rating">
+                    ★ @Model.VoteAverage.ToString("0.0") / 10
+                </span>
+                <span class="meta-chip">TMDB</span>
+                <span class="meta-chip">@Model.NumberOfSeasons сезонів</span>
+            </div>
+
+            <p class="details-overview">@overview</p>
+
+            <div class="details-actions">
+                <a asp-controller="Series"
+                   asp-action="Index"
+                   class="details-button details-button-primary">
+                    ← До серіалів
+                </a>
+
+                <a href="#series-info"
+                   class="details-button details-button-secondary">
+                    Детальніше ↓
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="details-body" id="series-info">
+        <h2 class="details-section-title">Про серіал</h2>
+
+        <div class="details-stats">
+            <div class="details-stat">
+                <span class="details-stat-label">Рейтинг TMDB</span>
+                <div class="details-stat-value">
+                    ★ @Model.VoteAverage.ToString("0.0")
+                </div>
+                <div class="details-stat-note">Оцінка глядачів</div>
+            </div>
+
+            <div class="details-stat">
+                <span class="details-stat-label">Сезони</span>
+                <div class="details-stat-value">@Model.NumberOfSeasons</div>
+                <div class="details-stat-note">Усього сезонів</div>
+            </div>
+
+            <div class="details-stat">
+                <span class="details-stat-label">Епізоди</span>
+                <div class="details-stat-value">@Model.NumberOfEpisodes</div>
+                <div class="details-stat-note">Усього епізодів</div>
+            </div>
+        </div>
+
+        <div class="details-info">
+            <div>
+                <h2 class="details-section-title">Сюжет</h2>
+                <p class="details-description">@overview</p>
+            </div>
+
+            <div class="details-facts">
+                <div class="details-fact">
+                    <span>Назва</span>
+                    <strong>@Model.Name</strong>
+                </div>
+
+                <div class="details-fact">
+                    <span>Прем'єра</span>
+                    <strong>@Model.FirstAirDate</strong>
+                </div>
+
+                <div class="details-fact">
+                    <span>Статус</span>
+                    <strong>@(Model.Status ?? "Невідомо")</strong>
+                </div>
+
+                <div class="details-fact">
+                    <span>Мова оригіналу</span>
+                    <strong>@(Model.OriginalLanguage?.ToUpperInvariant() ?? "—")</strong>
+                </div>
+            </div>
+        </div>
+
+        <a asp-controller="Series"
+           asp-action="Index"
+           class="details-back">
+            ← Повернутися до каталогу
+        </a>
+    </section>
+</div>

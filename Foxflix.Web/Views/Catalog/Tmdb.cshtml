@@ -1,0 +1,1788 @@
+﻿@model Foxflix.Web.Controllers.CatalogController.TmdbCatalogResponseDto
+
+@{
+    ViewData["Title"] = "Каталог — FOXFLIX";
+
+    string query = ViewBag.Query as string ?? "";
+    int? selectedGenre = ViewBag.GenreId as int?;
+    int? selectedYear = ViewBag.Year as int?;
+    double? selectedRating = ViewBag.MinimumRating as double?;
+    string sortBy = ViewBag.SortBy as string ?? "popularity.desc";
+
+    var genres = new Dictionary<int, string>
+    {
+        { 28, "Бойовик" },
+        { 12, "Пригоди" },
+        { 16, "Анімація" },
+        { 35, "Комедія" },
+        { 80, "Кримінал" },
+        { 99, "Документальний" },
+        { 18, "Драма" },
+        { 10751, "Сімейний" },
+        { 14, "Фентезі" },
+        { 36, "Історичний" },
+        { 27, "Жахи" },
+        { 10402, "Музика" },
+        { 9648, "Детектив" },
+        { 10749, "Мелодрама" },
+        { 878, "Фантастика" },
+        { 53, "Трилер" },
+        { 10752, "Воєнний" },
+        { 37, "Вестерн" }
+    };
+}
+
+<div class="fox-catalog">
+
+    <header class="catalog-header">
+        <a class="brand" asp-controller="Home" asp-action="Index" aria-label="FOXFLIX — головна">
+            <span class="brand-mark">F</span>
+            <span class="brand-name">FOXFLIX<span class="brand-dot">.</span></span>
+        </a>
+
+        <div class="header-caption">
+            <span class="status-dot"></span>
+            ТВОЯ ТЕРИТОРІЯ КІНО
+        </div>
+
+        <a class="my-list-link" asp-controller="Home" asp-action="MyList">
+            <span class="list-icon">＋</span>
+            <span>Мій список</span>
+        </a>
+    </header>
+
+    @if (TempData["MyListMessage"] is string message)
+    {
+        <div class="catalog-message" role="status">
+            <span class="message-icon">✓</span>
+            @message
+        </div>
+    }
+
+    <section class="catalog-hero">
+        <div class="hero-glow"></div>
+        <div class="hero-lines"></div>
+
+        <div class="hero-content">
+            <div class="hero-eyebrow">
+                <span class="eyebrow-line"></span>
+                ТВОЯ НАСТУПНА ІСТОРІЯ
+            </div>
+
+            <h1>
+                Відчуй кіно.<br />
+                <span>На повну.</span>
+            </h1>
+
+            <p>
+                Від культової класики до гучних прем'єр.
+                Знаходь історії, що залишаються з тобою.
+            </p>
+
+            <a href="#movie-catalog" class="hero-button">
+                Відкрити каталог
+                <span aria-hidden="true">↗</span>
+            </a>
+
+            <div class="hero-note">
+                <span class="hero-note-line"></span>
+                ТВОЯ НАСТУПНА УЛЮБЛЕНА ІСТОРІЯ ПОЧИНАЄТЬСЯ ТУТ
+            </div>
+        </div>
+
+        <div class="hero-watermark" aria-hidden="true">F</div>
+        <div class="hero-index" aria-hidden="true">01 / FILM DISCOVERY</div>
+    </section>
+
+    <section class="filter-panel" aria-label="Фільтри каталогу">
+        <div class="section-kicker">
+            <span class="section-kicker-number">01</span>
+            <span>ЗНАЙДИ СВОЄ КІНО</span>
+        </div>
+
+        <form method="get"
+              asp-controller="Catalog"
+              asp-action="Index"
+              class="catalog-filters">
+
+            <input type="hidden" name="source" value="tmdb" />
+            <input type="hidden" name="page" value="1" />
+
+            <div class="filter-field search-field">
+                <label for="query">ПОШУК</label>
+                <div class="search-input-wrap">
+                    <span class="search-icon" aria-hidden="true">⌕</span>
+                    <input id="query"
+                           name="query"
+                           value="@query"
+                           placeholder="Назва фільму..."
+                           autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="filter-field">
+                <label for="genreId">ЖАНР</label>
+                <select id="genreId" name="genreId">
+                    <option value="">Усі жанри</option>
+                    @foreach (var genre in genres)
+                    {
+                        if (selectedGenre == genre.Key)
+                        {
+                            <option value="@genre.Key" selected>@genre.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@genre.Key">@genre.Value</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="filter-field">
+                <label for="year">РІК ВИХОДУ</label>
+                <select id="year" name="year">
+                    <option value="">Будь-який</option>
+                    @for (int y = DateTime.Now.Year; y >= 1970; y--)
+                    {
+                        if (selectedYear == y)
+                        {
+                            <option value="@y" selected>@y</option>
+                        }
+                        else
+                        {
+                            <option value="@y">@y</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="filter-field">
+                <label for="minimumRating">РЕЙТИНГ</label>
+                <select id="minimumRating" name="minimumRating">
+                    <option value="">Будь-який</option>
+                    @foreach (double rating in new[] { 5.0, 6.0, 7.0, 8.0, 9.0 })
+                    {
+                        if (selectedRating == rating)
+                        {
+                            <option value="@rating.ToString(System.Globalization.CultureInfo.InvariantCulture)" selected>
+                                @rating.ToString("0.0")+
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@rating.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                @rating.ToString("0.0")+
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="filter-field">
+                <label for="sortBy">СОРТУВАННЯ</label>
+                <select id="sortBy" name="sortBy">
+                    <option value="popularity.desc" selected="@(sortBy == "popularity.desc")">Популярні</option>
+                    <option value="vote_average.desc" selected="@(sortBy == "vote_average.desc")">За рейтингом</option>
+                    <option value="primary_release_date.desc" selected="@(sortBy == "primary_release_date.desc")">Новіші</option>
+                    <option value="primary_release_date.asc" selected="@(sortBy == "primary_release_date.asc")">Старіші</option>
+                    <option value="original_title.asc" selected="@(sortBy == "original_title.asc")">За назвою</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="filter-button">
+                    <span>Знайти фільми</span>
+                    <span aria-hidden="true">↗</span>
+                </button>
+
+                <a asp-controller="Catalog"
+                   asp-action="Index"
+                   asp-route-source="tmdb"
+                   class="reset-button">
+                    Скинути фільтри
+                </a>
+            </div>
+        </form>
+    </section>
+
+    @if (ViewBag.CatalogError != null)
+    {
+        <div class="catalog-message error-message" role="alert">
+            <span class="message-icon">!</span>
+            @ViewBag.CatalogError
+        </div>
+    }
+
+    <section id="movie-catalog" class="catalog-results">
+        <div class="catalog-results-heading">
+            <div class="results-title-group">
+                <div class="section-kicker">
+                    <span class="section-kicker-number">02</span>
+                    <span>ОБРАНЕ ДЛЯ ТЕБЕ</span>
+                </div>
+                <h2>Світ <span>кіно</span></h2>
+                <p>Обирай, відкривай, додавай до своєї колекції.</p>
+            </div>
+
+            <div class="results-counter">
+                <span class="counter-number">@Model.TotalResults.ToString("N0")</span>
+                <span class="counter-label">ФІЛЬМІВ</span>
+            </div>
+        </div>
+
+        @if (Model.Results == null || Model.Results.Count == 0)
+        {
+            <div class="catalog-empty">
+                <div class="empty-symbol">⌕</div>
+                <h2>Нічого не знайдено</h2>
+                <p>Спробуй змінити пошук або обрати інші фільтри.</p>
+                <a asp-controller="Catalog"
+                   asp-action="Index"
+                   asp-route-source="tmdb"
+                   class="empty-reset">
+                    Показати всі фільми
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="movie-grid">
+                @foreach (var movie in Model.Results)
+                {
+                    string releaseYear =
+                        !string.IsNullOrWhiteSpace(movie.ReleaseDate)
+                        && movie.ReleaseDate.Length >= 4
+                        ? movie.ReleaseDate[..4]
+                        : "—";
+
+                    <article class="movie-card">
+                        <a class="movie-poster"
+                           asp-controller="Catalog"
+                           asp-action="Details"
+                           asp-route-id="@movie.Id"
+                           aria-label="Докладніше про фільм @movie.Title">
+
+                            @if (!string.IsNullOrWhiteSpace(movie.FullPosterUrl))
+                            {
+                                <img src="@movie.FullPosterUrl"
+                                     alt="Постер фільму @movie.Title"
+                                     loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="no-poster">FOXFLIX</div>
+                            }
+
+                            <span class="poster-shade"></span>
+
+                            <span class="rating">
+                                <span class="rating-star">★</span>
+                                @movie.Rating.ToString("0.0")
+                            </span>
+
+                            <span class="poster-overlay">
+                                <span class="play-symbol">↗</span>
+                                <span>ПЕРЕГЛЯНУТИ ФІЛЬМ</span>
+                            </span>
+
+                            <span class="poster-bottom-line"></span>
+                        </a>
+
+                        <div class="movie-info">
+                            <a class="movie-title-link"
+                               asp-controller="Catalog"
+                               asp-action="Details"
+                               asp-route-id="@movie.Id">
+                                <h3 title="@movie.Title">@movie.Title</h3>
+                            </a>
+
+                            <div class="movie-meta">
+                                <span>@releaseYear</span>
+                                <span class="meta-divider"></span>
+                                <span>@movie.OriginalLanguage.ToUpperInvariant()</span>
+                            </div>
+
+                            <p class="movie-overview">
+                                @(string.IsNullOrWhiteSpace(movie.Overview)
+                                    ? "Опис поки що відсутній."
+                                    : movie.Overview)
+                            </p>
+
+                            <div class="movie-actions">
+                                <a class="details-button"
+                                   asp-controller="Catalog"
+                                   asp-action="Details"
+                                   asp-route-id="@movie.Id">
+                                    Докладніше
+                                    <span aria-hidden="true">↗</span>
+                                </a>
+
+                                <form asp-controller="Catalog"
+                                      asp-action="AddToMyList"
+                                      method="post"
+                                      class="add-list-form">
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden" name="movieId" value="@movie.Id" />
+                                    <input type="hidden" name="title" value="@movie.Title" />
+                                    <input type="hidden" name="overview" value="@movie.Overview" />
+                                    <input type="hidden" name="releaseDate" value="@movie.ReleaseDate" />
+                                    <input type="hidden" name="posterUrl" value="@movie.FullPosterUrl" />
+                                    <input type="hidden" name="rating" value="@movie.Rating.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+
+                                    <button type="submit"
+                                            class="add-list-button"
+                                            title="Додати до мого списку"
+                                            aria-label="Додати @movie.Title до мого списку">
+                                        +
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+
+            <nav class="pagination" aria-label="Сторінки каталогу">
+                @if (Model.Page > 1)
+                {
+                    <a class="page-link"
+                       asp-controller="Catalog"
+                       asp-action="Index"
+                       asp-route-source="tmdb"
+                       asp-route-query="@query"
+                       asp-route-genreId="@selectedGenre"
+                       asp-route-year="@selectedYear"
+                       asp-route-minimumRating="@selectedRating"
+                       asp-route-sortBy="@sortBy"
+                       asp-route-page="@(Model.Page - 1)">
+                        <span aria-hidden="true">←</span>
+                        Назад
+                    </a>
+                }
+
+                <span class="page-status">
+                    СТОРІНКА <strong>@Model.Page</strong> / @Model.TotalPages
+                </span>
+
+                @if (Model.Page < Model.TotalPages && Model.Page < 500)
+                {
+                    <a class="page-link"
+                       asp-controller="Catalog"
+                       asp-action="Index"
+                       asp-route-source="tmdb"
+                       asp-route-query="@query"
+                       asp-route-genreId="@selectedGenre"
+                       asp-route-year="@selectedYear"
+                       asp-route-minimumRating="@selectedRating"
+                       asp-route-sortBy="@sortBy"
+                       asp-route-page="@(Model.Page + 1)">
+                        Далі
+                        <span aria-hidden="true">→</span>
+                    </a>
+                }
+            </nav>
+        }
+    </section>
+
+    <footer class="catalog-footer">
+        <a class="footer-brand" asp-controller="Home" asp-action="Index">
+            FOXFLIX<span>.</span>
+        </a>
+
+        <p>Кожна історія варта перегляду.</p>
+
+        <span class="footer-copy">© @DateTime.Now.Year FOXFLIX</span>
+    </footer>
+</div>
+
+<style>
+    .fox-catalog {
+        --fox-red: #e50914;
+        --fox-red-light: #ff303a;
+        --fox-bg: #080808;
+        --fox-panel: #111111;
+        --fox-card: #141414;
+        --fox-border: #292929;
+        --fox-muted: #969696;
+        --fox-white: #f6f6f6;
+
+        width: 100%;
+        min-height: 100vh;
+        padding: 26px clamp(16px, 4vw, 58px) 42px;
+        color: var(--fox-white);
+        background: var(--fox-bg);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .fox-catalog *,
+    .fox-catalog *::before,
+    .fox-catalog *::after {
+        box-sizing: border-box;
+    }
+
+    .fox-catalog a {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .fox-catalog button,
+    .fox-catalog input,
+    .fox-catalog select {
+        font: inherit;
+    }
+
+    .catalog-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #242424;
+    }
+
+    .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .brand-mark {
+        display: grid;
+        width: 37px;
+        height: 37px;
+        place-items: center;
+        color: #fff;
+        background: var(--fox-red);
+        border-radius: 5px;
+        font-size: 25px;
+        font-weight: 900;
+        font-style: italic;
+        box-shadow: 0 0 24px rgba(229, 9, 20, .18);
+    }
+
+    .brand-name {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+    }
+
+    .brand-dot,
+    .footer-brand span {
+        color: var(--fox-red);
+    }
+
+    .header-caption {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #888;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-align: center;
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        flex-shrink: 0;
+        background: var(--fox-red);
+        border-radius: 50%;
+        box-shadow: 0 0 12px rgba(229, 9, 20, .8);
+    }
+
+    .my-list-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        min-height: 42px;
+        padding: 0 15px;
+        color: #fff;
+        background: #151515;
+        border: 1px solid #353535;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .2s, border-color .2s, transform .2s;
+    }
+
+    .my-list-link:hover {
+        background: #201011;
+        border-color: var(--fox-red);
+        transform: translateY(-1px);
+    }
+
+    .list-icon {
+        color: var(--fox-red);
+        font-size: 21px;
+        line-height: 1;
+    }
+
+    .catalog-message {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 18px;
+        margin-top: 20px;
+        color: #e8e8e8;
+        background: #151515;
+        border: 1px solid #303030;
+        border-left: 3px solid var(--fox-red);
+        border-radius: 4px;
+        overflow-wrap: anywhere;
+    }
+
+    .message-icon {
+        display: grid;
+        width: 25px;
+        height: 25px;
+        flex-shrink: 0;
+        place-items: center;
+        color: #fff;
+        background: var(--fox-red);
+        border-radius: 50%;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .error-message {
+        border-left-color: #ff7a43;
+    }
+
+    .error-message .message-icon {
+        background: #b84b25;
+    }
+
+    .catalog-hero {
+        position: relative;
+        display: flex;
+        min-height: 370px;
+        align-items: center;
+        overflow: hidden;
+        isolation: isolate;
+        padding: clamp(28px, 5.5vw, 68px);
+        margin: 28px 0 42px;
+        background:
+            linear-gradient(90deg, #171010 0%, #100b0b 48%, #090909 100%);
+        border: 1px solid #382022;
+        border-radius: 8px;
+    }
+
+    .catalog-hero::before {
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        background:
+            linear-gradient(90deg, transparent 45%, rgba(229, 9, 20, .05)),
+            repeating-linear-gradient(
+                135deg,
+                transparent 0,
+                transparent 37px,
+                rgba(255, 255, 255, .018) 38px,
+                transparent 39px
+            );
+        content: "";
+        pointer-events: none;
+    }
+
+    .hero-glow {
+        position: absolute;
+        z-index: -1;
+        top: -180px;
+        right: 2%;
+        width: 480px;
+        height: 480px;
+        background: rgba(229, 9, 20, .18);
+        border-radius: 50%;
+        filter: blur(90px);
+        pointer-events: none;
+    }
+
+    .hero-lines {
+        position: absolute;
+        z-index: -1;
+        top: 12%;
+        right: 8%;
+        width: 240px;
+        height: 76%;
+        border: 1px solid rgba(229, 9, 20, .22);
+        border-radius: 48%;
+        transform: rotate(32deg);
+        pointer-events: none;
+    }
+
+    .hero-lines::after {
+        position: absolute;
+        inset: 16px -26px;
+        border: 1px solid rgba(229, 9, 20, .14);
+        border-radius: 48%;
+        content: "";
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 570px;
+    }
+
+    .hero-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        color: #ff7379;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2.5px;
+    }
+
+    .eyebrow-line {
+        display: inline-block;
+        width: 28px;
+        height: 2px;
+        background: var(--fox-red);
+    }
+
+    .hero-content h1 {
+        margin: 23px 0 16px;
+        color: #fff;
+        font-size: clamp(42px, 6vw, 76px);
+        font-weight: 900;
+        line-height: 1.02;
+        letter-spacing: -2.5px;
+    }
+
+    .hero-content h1 span {
+        color: var(--fox-red);
+    }
+
+    .hero-content p {
+        max-width: 430px;
+        margin: 0;
+        color: #b8b0b0;
+        font-size: 14px;
+        line-height: 1.85;
+    }
+
+    .hero-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        min-height: 48px;
+        padding: 0 20px;
+        margin-top: 25px;
+        color: #fff;
+        background: var(--fox-red);
+        border: 1px solid var(--fox-red);
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: background .2s, box-shadow .2s, transform .2s;
+    }
+
+    .hero-button:hover {
+        background: #b80710;
+        box-shadow: 0 8px 24px rgba(229, 9, 20, .22);
+        transform: translateY(-2px);
+    }
+
+    .hero-button span {
+        font-size: 17px;
+    }
+
+    .hero-note {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 31px;
+        color: #777;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 1.6px;
+        line-height: 1.8;
+    }
+
+    .hero-note-line {
+        width: 19px;
+        height: 1px;
+        flex-shrink: 0;
+        background: #555;
+    }
+
+    .hero-watermark {
+        position: absolute;
+        z-index: -1;
+        top: 50%;
+        right: 10%;
+        color: rgba(255, 255, 255, .035);
+        font-size: clamp(220px, 31vw, 400px);
+        font-weight: 900;
+        font-style: italic;
+        line-height: 1;
+        transform: translateY(-53%);
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .hero-index {
+        position: absolute;
+        right: 22px;
+        bottom: 20px;
+        color: #6b5555;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .filter-panel {
+        margin-bottom: 52px;
+    }
+
+    .section-kicker {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 18px;
+        color: #999;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2px;
+    }
+
+    .section-kicker-number {
+        display: inline-grid;
+        width: 26px;
+        height: 26px;
+        place-items: center;
+        color: #ff666e;
+        background: #251012;
+        border: 1px solid #512024;
+        border-radius: 4px;
+        font-size: 10px;
+        letter-spacing: 0;
+    }
+
+    .catalog-filters {
+        display: grid;
+        grid-template-columns: minmax(180px, 1.7fr) repeat(4, minmax(115px, 1fr));
+        gap: 15px;
+        align-items: end;
+        padding: 22px;
+        background: linear-gradient(145deg, #141414, #101010);
+        border: 1px solid #292929;
+        border-radius: 7px;
+    }
+
+    .filter-field {
+        min-width: 0;
+    }
+
+    .filter-field label {
+        display: block;
+        margin-bottom: 9px;
+        color: #929292;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.3px;
+    }
+
+    .search-input-wrap {
+        position: relative;
+    }
+
+    .search-icon {
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        color: #e14b53;
+        font-size: 23px;
+        line-height: 1;
+        transform: translateY(-55%);
+        pointer-events: none;
+    }
+
+    .filter-field input,
+    .filter-field select {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        height: 45px;
+        padding: 0 11px;
+        color: #ededed;
+        background-color: #1b1b1b;
+        border: 1px solid #363636;
+        border-radius: 4px;
+        outline: none;
+        font-size: 12px;
+        transition: border-color .2s, background .2s;
+    }
+
+    .search-input-wrap input {
+        padding-left: 39px;
+    }
+
+    .filter-field input:focus,
+    .filter-field select:focus {
+        background-color: #202020;
+        border-color: var(--fox-red);
+        box-shadow: 0 0 0 2px rgba(229, 9, 20, .09);
+    }
+
+    .filter-field input::placeholder {
+        color: #686868;
+    }
+
+    .filter-field select option {
+        color: #fff;
+        background: #181818;
+    }
+
+    .filter-actions {
+        display: flex;
+        grid-column: 1 / -1;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-top: 3px;
+    }
+
+    .filter-button,
+    .reset-button {
+        display: inline-flex;
+        min-height: 43px;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        padding: 0 17px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background .2s, border-color .2s;
+    }
+
+    .filter-button {
+        color: #fff;
+        background: var(--fox-red);
+        border: 1px solid var(--fox-red);
+    }
+
+    .filter-button:hover {
+        background: #b80710;
+        border-color: #b80710;
+    }
+
+    .filter-button span:last-child {
+        font-size: 16px;
+    }
+
+    .reset-button {
+        color: #bbb;
+        background: #1c1c1c;
+        border: 1px solid #353535;
+    }
+
+    .reset-button:hover {
+        color: #fff;
+        background: #292929;
+        border-color: #555;
+    }
+
+    .catalog-results {
+        scroll-margin-top: 25px;
+    }
+
+    .catalog-results-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .results-title-group .section-kicker {
+        margin-bottom: 10px;
+    }
+
+    .catalog-results-heading h2 {
+        margin: 0;
+        color: #fff;
+        font-size: clamp(28px, 3.4vw, 39px);
+        font-weight: 900;
+        line-height: 1.15;
+        letter-spacing: -1px;
+    }
+
+    .catalog-results-heading h2 span {
+        color: var(--fox-red);
+    }
+
+    .catalog-results-heading p {
+        margin: 9px 0 0;
+        color: var(--fox-muted);
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .results-counter {
+        display: flex;
+        flex-shrink: 0;
+        flex-direction: column;
+        align-items: flex-end;
+        padding-left: 20px;
+        border-left: 1px solid #333;
+    }
+
+    .counter-number {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .counter-label {
+        margin-top: 4px;
+        color: #777;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 2px;
+    }
+
+    .movie-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 25px 17px;
+    }
+
+    .movie-card {
+        min-width: 0;
+        overflow: hidden;
+        background: var(--fox-card);
+        border: 1px solid #282828;
+        border-radius: 6px;
+        transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    }
+
+    .movie-card:hover {
+        border-color: #792329;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, .3);
+        transform: translateY(-4px);
+    }
+
+    .movie-poster {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        aspect-ratio: 2 / 3;
+        background: #202020;
+        text-decoration: none;
+    }
+
+    .movie-poster img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .45s ease, filter .3s ease;
+    }
+
+    .movie-card:hover .movie-poster img {
+        filter: brightness(.78);
+        transform: scale(1.055);
+    }
+
+    .no-poster {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        min-height: 190px;
+        place-items: center;
+        color: var(--fox-red);
+        background:
+            radial-gradient(circle, #292020 0, #161616 55%, #101010 100%);
+        font-size: 19px;
+        font-weight: 900;
+        letter-spacing: 3px;
+    }
+
+    .poster-shade {
+        position: absolute;
+        inset: 40% 0 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, .34));
+        pointer-events: none;
+    }
+
+    .rating {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 8px;
+        color: #fff;
+        background: rgba(12, 12, 12, .88);
+        border: 1px solid rgba(255, 255, 255, .14);
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 800;
+        backdrop-filter: blur(6px);
+    }
+
+    .rating-star {
+        color: #ffcf54;
+        font-size: 12px;
+    }
+
+    .poster-overlay {
+        position: absolute;
+        right: 8px;
+        bottom: 18px;
+        left: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        opacity: 0;
+        text-align: center;
+        transform: translateY(8px);
+        transition: opacity .22s, transform .22s;
+    }
+
+    .play-symbol {
+        display: grid;
+        width: 37px;
+        height: 37px;
+        place-items: center;
+        color: #fff;
+        background: var(--fox-red);
+        border-radius: 50%;
+        font-size: 17px;
+    }
+
+    .movie-card:hover .poster-overlay,
+    .movie-poster:focus-visible .poster-overlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .poster-bottom-line {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: var(--fox-red);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .3s ease;
+    }
+
+    .movie-card:hover .poster-bottom-line {
+        transform: scaleX(1);
+    }
+
+    .movie-info {
+        display: flex;
+        flex-direction: column;
+        padding: 14px 12px 12px;
+    }
+
+    .movie-title-link {
+        color: #f7f7f7;
+        text-decoration: none;
+    }
+
+    .movie-title-link:hover {
+        color: #ff646b;
+    }
+
+    .movie-info h3 {
+        display: -webkit-box;
+        overflow: hidden;
+        min-height: 42px;
+        margin: 0 0 9px;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .movie-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #999;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .meta-divider {
+        width: 3px;
+        height: 3px;
+        flex-shrink: 0;
+        background: var(--fox-red);
+        border-radius: 50%;
+    }
+
+    .movie-overview {
+        display: -webkit-box;
+        overflow: hidden;
+        min-height: 54px;
+        margin: 12px 0;
+        color: #969696;
+        font-size: 11px;
+        line-height: 1.65;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+
+    .movie-actions {
+        display: flex;
+        align-items: stretch;
+        gap: 7px;
+        margin-top: auto;
+        padding-top: 11px;
+        border-top: 1px solid #303030;
+    }
+
+    .details-button {
+        display: flex;
+        min-width: 0;
+        min-height: 38px;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 5px;
+        color: #e9e9e9;
+        background: #222;
+        border: 1px solid #333;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 800;
+        text-align: center;
+        text-decoration: none;
+        transition: background .2s, border-color .2s;
+    }
+
+    .details-button:hover {
+        color: #fff;
+        background: var(--fox-red);
+        border-color: var(--fox-red);
+    }
+
+    .details-button span {
+        flex-shrink: 0;
+        font-size: 14px;
+    }
+
+    .add-list-form {
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    .add-list-button {
+        display: grid;
+        width: 38px;
+        min-height: 38px;
+        place-items: center;
+        color: #fff;
+        background: #202020;
+        border: 1px solid #414141;
+        border-radius: 4px;
+        font-size: 23px;
+        line-height: 1;
+        cursor: pointer;
+        transition: background .2s, border-color .2s, transform .2s;
+    }
+
+    .add-list-button:hover {
+        background: var(--fox-red);
+        border-color: var(--fox-red);
+        transform: scale(1.04);
+    }
+
+    .catalog-empty {
+        display: flex;
+        min-height: 290px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 35px 20px;
+        background:
+            radial-gradient(ellipse at center, rgba(229, 9, 20, .07), transparent 65%),
+            #111;
+        border: 1px solid #292929;
+        border-radius: 7px;
+        text-align: center;
+    }
+
+    .empty-symbol {
+        display: grid;
+        width: 55px;
+        height: 55px;
+        place-items: center;
+        color: #ff545d;
+        background: #271012;
+        border: 1px solid #4a1c20;
+        border-radius: 50%;
+        font-size: 33px;
+    }
+
+    .catalog-empty h2 {
+        margin: 18px 0 6px;
+        font-size: 23px;
+        font-weight: 800;
+    }
+
+    .catalog-empty p {
+        margin: 0;
+        color: #999;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .empty-reset {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 16px;
+        margin-top: 20px;
+        color: #fff;
+        background: var(--fox-red);
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .empty-reset:hover {
+        background: #b80710;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 40px;
+    }
+
+    .page-link {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 15px;
+        color: #eee;
+        background: #181818;
+        border: 1px solid #353535;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: background .2s, border-color .2s;
+    }
+
+    .page-link:hover {
+        color: #fff;
+        background: var(--fox-red);
+        border-color: var(--fox-red);
+    }
+
+    .page-status {
+        color: #858585;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+    }
+
+    .page-status strong {
+        color: #fff;
+        font-size: 12px;
+    }
+
+    .catalog-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 52px;
+        padding-top: 22px;
+        border-top: 1px solid #292929;
+    }
+
+    .footer-brand {
+        color: #fff;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-decoration: none;
+    }
+
+    .catalog-footer p {
+        margin: 0;
+        color: #777;
+        font-size: 11px;
+    }
+
+    .footer-copy {
+        color: #666;
+        font-size: 10px;
+    }
+
+    /* Невеликі ноутбуки */
+    @@media (max-width: 1200px) {
+        .fox-catalog {
+            padding-right: 28px;
+            padding-left: 28px;
+        }
+
+        .catalog-filters {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .search-field {
+            grid-column: span 2;
+        }
+
+        .movie-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .hero-watermark {
+            right: 5%;
+        }
+    }
+
+    /* Планшети */
+    @@media (max-width: 850px) {
+        .fox-catalog {
+            padding-right: 22px;
+            padding-left: 22px;
+        }
+
+        .header-caption {
+            font-size: 9px;
+            letter-spacing: 1.2px;
+        }
+
+        .catalog-hero {
+            min-height: 340px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(42px, 7vw, 61px);
+        }
+
+        .hero-watermark {
+            right: -1%;
+            opacity: .7;
+        }
+
+        .movie-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px 13px;
+        }
+
+        .catalog-filters {
+            gap: 13px;
+            padding: 17px;
+        }
+    }
+
+    /* Мобільні телефони */
+    @@media (max-width: 600px) {
+        .fox-catalog {
+            padding: 16px 14px 28px;
+            font-size: 13px;
+        }
+
+        .catalog-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 13px;
+            padding-bottom: 17px;
+        }
+
+        .brand-mark {
+            width: 32px;
+            height: 32px;
+            font-size: 22px;
+        }
+
+        .brand-name {
+            font-size: 17px;
+        }
+
+        .header-caption {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            justify-content: flex-start;
+            font-size: 8px;
+        }
+
+        .my-list-link {
+            min-height: 37px;
+            gap: 6px;
+            padding: 0 10px;
+            font-size: 11px;
+        }
+
+        .list-icon {
+            font-size: 18px;
+        }
+
+        .catalog-hero {
+            min-height: 330px;
+            padding: 29px 21px;
+            margin: 20px 0 33px;
+        }
+
+        .hero-content {
+            max-width: 100%;
+        }
+
+        .hero-eyebrow {
+            gap: 8px;
+            font-size: 8px;
+            letter-spacing: 1.6px;
+        }
+
+        .eyebrow-line {
+            width: 20px;
+        }
+
+        .hero-content h1 {
+            margin: 20px 0 13px;
+            font-size: clamp(40px, 10vw, 53px);
+            letter-spacing: -1.5px;
+        }
+
+        .hero-content p {
+            max-width: 340px;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .hero-button {
+            min-height: 43px;
+            gap: 15px;
+            padding: 0 14px;
+            margin-top: 20px;
+            font-size: 11px;
+        }
+
+        .hero-note {
+            max-width: 260px;
+            gap: 7px;
+            margin-top: 24px;
+            font-size: 7px;
+            letter-spacing: 1px;
+        }
+
+        .hero-watermark {
+            top: 45%;
+            right: -7%;
+            font-size: 260px;
+            opacity: .65;
+        }
+
+        .hero-index {
+            right: 12px;
+            bottom: 11px;
+            font-size: 7px;
+        }
+
+        .filter-panel {
+            margin-bottom: 38px;
+        }
+
+        .section-kicker {
+            gap: 8px;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+        }
+
+        .section-kicker-number {
+            width: 24px;
+            height: 24px;
+        }
+
+        .catalog-filters {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 13px 10px;
+            padding: 13px;
+        }
+
+        .search-field {
+            grid-column: 1 / -1;
+        }
+
+        .filter-field label {
+            margin-bottom: 7px;
+            font-size: 8px;
+            letter-spacing: .9px;
+        }
+
+        .filter-field input,
+        .filter-field select {
+            height: 42px;
+            padding-right: 7px;
+            padding-left: 8px;
+            font-size: 11px;
+        }
+
+        .search-input-wrap input {
+            padding-left: 36px;
+        }
+
+        .filter-actions {
+            gap: 8px;
+        }
+
+        .filter-button,
+        .reset-button {
+            min-height: 40px;
+            gap: 9px;
+            padding: 0 11px;
+            font-size: 10px;
+        }
+
+        .catalog-results-heading {
+            align-items: flex-end;
+            gap: 10px;
+            margin-bottom: 19px;
+        }
+
+        .results-title-group .section-kicker {
+            margin-bottom: 9px;
+        }
+
+        .catalog-results-heading h2 {
+            font-size: clamp(25px, 7vw, 31px);
+        }
+
+        .catalog-results-heading p {
+            max-width: 240px;
+            font-size: 11px;
+        }
+
+        .results-counter {
+            padding-left: 10px;
+        }
+
+        .counter-number {
+            font-size: 19px;
+        }
+
+        .counter-label {
+            font-size: 8px;
+            letter-spacing: 1px;
+        }
+
+        .movie-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px 11px;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .rating {
+            top: 7px;
+            left: 7px;
+            gap: 4px;
+            padding: 5px 6px;
+            font-size: 10px;
+        }
+
+        .rating-star {
+            font-size: 10px;
+        }
+
+        .poster-overlay {
+            display: none;
+        }
+
+        .movie-info {
+            padding: 11px 9px 9px;
+        }
+
+        .movie-info h3 {
+            min-height: 38px;
+            margin-bottom: 7px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .movie-meta {
+            gap: 6px;
+            font-size: 9px;
+        }
+
+        .movie-overview {
+            min-height: 49px;
+            margin: 9px 0;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .movie-actions {
+            gap: 5px;
+            padding-top: 8px;
+        }
+
+        .details-button {
+            min-height: 35px;
+            gap: 4px;
+            padding: 6px 3px;
+            font-size: 10px;
+        }
+
+        .details-button span {
+            font-size: 12px;
+        }
+
+        .add-list-button {
+            width: 34px;
+            min-height: 35px;
+            font-size: 21px;
+        }
+
+        .pagination {
+            gap: 8px;
+            margin-top: 30px;
+        }
+
+        .page-link {
+            min-height: 38px;
+            gap: 6px;
+            padding: 0 10px;
+            font-size: 10px;
+        }
+
+        .page-status {
+            font-size: 8px;
+            letter-spacing: .8px;
+        }
+
+        .catalog-footer {
+            gap: 9px;
+            margin-top: 37px;
+            padding-top: 17px;
+        }
+
+        .footer-brand {
+            font-size: 13px;
+        }
+
+        .catalog-footer p {
+            order: 3;
+            width: 100%;
+            font-size: 10px;
+        }
+
+        .footer-copy {
+            font-size: 9px;
+        }
+    }
+
+    /* Дуже вузькі екрани */
+    @@media (max-width: 360px) {
+        .fox-catalog {
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+
+        .brand-name {
+            font-size: 15px;
+        }
+
+        .header-caption {
+            letter-spacing: .8px;
+        }
+
+        .catalog-hero {
+            min-height: 310px;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .hero-content h1 {
+            font-size: 38px;
+        }
+
+        .hero-note {
+            font-size: 6px;
+        }
+
+        .catalog-filters {
+            gap: 11px 8px;
+            padding: 10px;
+        }
+
+        .filter-button,
+        .reset-button {
+            padding: 0 8px;
+            font-size: 9px;
+        }
+
+        .movie-grid {
+            gap: 12px 8px;
+        }
+
+        .movie-info {
+            padding-right: 7px;
+            padding-left: 7px;
+        }
+
+        .movie-info h3 {
+            font-size: 11px;
+        }
+
+        .movie-overview {
+            font-size: 9px;
+        }
+
+        .details-button {
+            font-size: 9px;
+        }
+
+        .add-list-button {
+            width: 30px;
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .fox-catalog *,
+        .fox-catalog *::before,
+        .fox-catalog *::after {
+            scroll-behavior: auto !important;
+            transition-duration: .01ms !important;
+            animation-duration: .01ms !important;
+        }
+    }
+</style>

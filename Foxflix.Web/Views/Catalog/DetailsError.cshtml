@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Фільм недоступний";
+}
+
+<section style="min-height:70vh;background:#080808;color:white;padding:80px 24px;text-align:center;">
+    <h1>Не вдалося завантажити фільм</h1>
+    <p style="color:#bbb;">Перевір з'єднання з Foxflix API та спробуй ще раз.</p>
+    <a asp-controller="Catalog" asp-action="Index"
+       style="display:inline-block;margin-top:20px;background:#e50914;color:white;padding:12px 22px;border-radius:6px;text-decoration:none;">
+        Повернутися до каталогу
+    </a>
+</section>

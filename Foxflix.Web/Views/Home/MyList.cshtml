@@ -1,0 +1,420 @@
+
+@model List<Foxflix.Web.Controllers.HomeController.FavoriteDto>
+
+@{
+    var publicApiBaseUrl = (Configuration["ApiSettings:PublicBaseUrl"] ?? Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7283/").TrimEnd('/');
+    ViewData["Title"] = "Мій список";
+}
+
+<style>
+    .my-list-page {
+        min-height: 80vh;
+        padding: 55px 0 90px;
+        background:
+            radial-gradient(ellipse at top left, rgba(229, 9, 20, .09), transparent 40%),
+            #080808;
+        color: #f5f5f5;
+    }
+
+    .my-list-container {
+        width: min(1400px, calc(100% - 48px));
+        margin: 0 auto;
+    }
+
+    .my-list-label {
+        display: inline-block;
+        color: #e50914;
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 4px;
+    }
+
+    .my-list-header {
+        position: relative;
+        margin-bottom: 38px;
+        padding-bottom: 27px;
+        border-bottom: 1px solid #292929;
+    }
+
+    .my-list-header h1 {
+        margin: 13px 0;
+        font-size: clamp(34px, 5vw, 52px);
+        font-weight: 850;
+        letter-spacing: -1.5px;
+    }
+
+    .my-list-header p {
+        margin: 0;
+        color: #a5a5a5;
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .my-list-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 19px;
+        padding: 9px 14px;
+        border: 1px solid #3a2426;
+        border-radius: 7px;
+        background: #171011;
+        color: #f0dada;
+        font-size: 13px;
+    }
+
+    .my-list-count-icon {
+        color: #e50914;
+        font-size: 17px;
+    }
+
+    .my-list-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 32px 22px;
+    }
+
+    .my-list-card {
+        display: block;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid #242424;
+        border-radius: 10px;
+        background: #111111;
+        color: inherit;
+        text-decoration: none;
+        transition:
+            transform .25s ease,
+            border-color .25s ease,
+            box-shadow .25s ease;
+    }
+
+    .my-list-card:hover {
+        transform: translateY(-6px);
+        border-color: #e50914;
+        box-shadow: 0 12px 30px rgba(229, 9, 20, .12);
+        color: white;
+    }
+
+    .my-list-poster {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 2 / 3;
+        background: #181818;
+    }
+
+    .my-list-poster::after {
+        position: absolute;
+        inset: 40% 0 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, .6));
+        content: "";
+        pointer-events: none;
+    }
+
+    .my-list-poster img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .4s ease;
+    }
+
+    .my-list-card:hover .my-list-poster img {
+        transform: scale(1.055);
+    }
+
+    .my-list-placeholder {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        place-items: center;
+        background:
+            radial-gradient(ellipse, rgba(229, 9, 20, .13), transparent 65%),
+            #151515;
+        color: #e50914;
+        font-size: 19px;
+        font-weight: 900;
+        letter-spacing: 4px;
+    }
+
+    .my-list-type {
+        position: absolute;
+        z-index: 1;
+        top: 11px;
+        left: 11px;
+        max-width: calc(100% - 22px);
+        padding: 7px 9px;
+        overflow: hidden;
+        border: 1px solid #ffffff24;
+        border-radius: 5px;
+        background: rgba(8, 8, 8, .86);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 850;
+        letter-spacing: 1px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        backdrop-filter: blur(8px);
+    }
+
+    .my-list-info {
+        padding: 14px 13px 16px;
+    }
+
+    .my-list-info h3 {
+        overflow: hidden;
+        margin: 0 0 10px;
+        color: #f5f5f5;
+        font-size: 15px;
+        font-weight: 750;
+        line-height: 1.5;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .my-list-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        color: #a3a3a3;
+        font-size: 12px;
+    }
+
+    .my-list-rating {
+        color: #ff5159;
+        font-weight: 750;
+    }
+
+    .my-list-empty {
+        padding: 75px 24px;
+        border: 1px solid #292929;
+        border-radius: 12px;
+        background:
+            radial-gradient(ellipse at center top, rgba(229, 9, 20, .09), transparent 65%),
+            #111111;
+        text-align: center;
+    }
+
+    .my-list-empty-icon {
+        display: grid;
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 24px;
+        place-items: center;
+        border: 1px solid #542226;
+        border-radius: 50%;
+        background: #211113;
+        color: #e50914;
+        font-size: 36px;
+    }
+
+    .my-list-empty h2 {
+        margin: 0 0 12px;
+        font-size: clamp(22px, 4vw, 29px);
+        font-weight: 850;
+    }
+
+    .my-list-empty p {
+        max-width: 460px;
+        margin: 0 auto 27px;
+        color: #a5a5a5;
+        line-height: 1.8;
+    }
+
+    .my-list-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 23px;
+        border: 1px solid #e50914;
+        border-radius: 7px;
+        background: #e50914;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 800;
+        text-decoration: none;
+        transition:
+            background .2s ease,
+            border-color .2s ease,
+            transform .2s ease;
+    }
+
+    .my-list-button:hover {
+        transform: translateY(-2px);
+        border-color: #ff2934;
+        background: #b20710;
+        color: #fff;
+    }
+
+    .my-list-error {
+        margin-bottom: 18px;
+        padding: 15px 17px;
+        border: 1px solid #70252b;
+        border-left: 4px solid #e50914;
+        border-radius: 7px;
+        background: #1d1011;
+        color: #ffc4c8;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    @@media (max-width: 1150px) {
+        .my-list-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 850px) {
+        .my-list-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px 15px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .my-list-container {
+            width: calc(100% - 28px);
+        }
+
+        .my-list-page {
+            padding-top: 34px;
+        }
+
+        .my-list-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px 12px;
+        }
+
+        .my-list-info {
+            padding: 11px 10px 13px;
+        }
+
+        .my-list-info h3 {
+            font-size: 14px;
+        }
+
+        .my-list-header {
+            margin-bottom: 27px;
+        }
+
+        .my-list-empty {
+            padding: 50px 18px;
+        }
+    }
+</style>
+
+<section class="my-list-page">
+    <div class="my-list-container">
+
+        <header class="my-list-header">
+            <span class="my-list-label">FOXFLIX / MY LIBRARY</span>
+
+            <h1>Мій список</h1>
+
+            <p>
+                Усі фільми, які ти зберіг, в одному місці.
+            </p>
+
+            <div class="my-list-count">
+                <span class="my-list-count-icon">▦</span>
+                <span>@Model.Count фільм(ів)</span>
+            </div>
+        </header>
+
+        @if (ViewBag.MyListError is string error)
+        {
+            <div class="my-list-error">@error</div>
+        }
+
+        @if (ViewBag.LocalFavoritesError is string localError)
+        {
+            <div class="my-list-error">@localError</div>
+        }
+
+        @if (ViewBag.TmdbFavoritesError is string tmdbError)
+        {
+            <div class="my-list-error">@tmdbError</div>
+        }
+
+        @if (Model.Count == 0)
+        {
+            <div class="my-list-empty">
+                <div class="my-list-empty-icon">＋</div>
+
+                <h2>Твій список поки порожній</h2>
+
+                <p>
+                    Знаходь цікаві фільми в каталозі та додавай їх
+                    до свого списку, щоб повернутися до них пізніше.
+                </p>
+
+                <a asp-controller="Catalog"
+                   asp-action="Index"
+                   asp-route-source="tmdb"
+                   class="my-list-button">
+                    Переглянути каталог
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="my-list-grid">
+                @foreach (var movie in Model)
+                {
+                    var detailsUrl = movie.IsTmdb
+                        ? Url.Action("Details", "Catalog", new { id = movie.MovieId })
+                        : Url.Action("Index", "Movie", new { id = movie.MovieId });
+
+                    var posterUrl = movie.IsTmdb
+                        ? movie.PosterUrl
+                        : !string.IsNullOrWhiteSpace(movie.PosterPath)
+                            ? $"{publicApiBaseUrl}/api/movies/{movie.MovieId}/poster"
+                            : movie.PosterUrl;
+
+                    <a href="@detailsUrl" class="my-list-card">
+                        <div class="my-list-poster">
+
+                            @if (!string.IsNullOrWhiteSpace(posterUrl))
+                            {
+                                <img src="@posterUrl"
+                                     alt="@movie.Title"
+                                     loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="my-list-placeholder">
+                                    FOXFLIX
+                                </div>
+                            }
+
+                            <span class="my-list-type">
+                                @(movie.IsTmdb ? "TMDB" : "MY LIBRARY")
+                            </span>
+                        </div>
+
+                        <div class="my-list-info">
+                            <h3 title="@movie.Title">
+                                @movie.Title
+                            </h3>
+
+                            <div class="my-list-meta">
+                                @if (movie.ReleaseYear > 0)
+                                {
+                                    <span>@movie.ReleaseYear</span>
+                                }
+
+                                <span class="my-list-rating">
+                                    ★ @movie.Rating.ToString("0.0")
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+
+    </div>
+</section>

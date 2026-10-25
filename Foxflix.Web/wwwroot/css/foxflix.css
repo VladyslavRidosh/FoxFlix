@@ -1,0 +1,3027 @@
+:root {
+    --foxflix-red: #e50914;
+    --foxflix-red-hover: #f40612;
+    --foxflix-red-dark: #b20710;
+    --foxflix-black: #080808;
+    --foxflix-dark: #101010;
+    --foxflix-card: #151515;
+    --foxflix-card-hover: #1c1c1c;
+    --foxflix-text: #ffffff;
+    --foxflix-secondary: #b3b3b3;
+    --foxflix-muted: #777777;
+    --foxflix-border: rgba(255, 255, 255, 0.08);
+    --foxflix-border-hover: rgba(255, 255, 255, 0.16);
+    --foxflix-radius: 6px;
+    --foxflix-radius-large: 12px;
+    --foxflix-container: 1500px;
+    --foxflix-transition-fast: 0.18s ease;
+    --foxflix-transition: 0.25s ease;
+    --foxflix-transition-slow: 0.4s ease;
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    background: var(--foxflix-black);
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: radial-gradient( circle at 50% -20%, rgba(229, 9, 20, 0.035), transparent 35% ), var(--foxflix-black);
+    color: var(--foxflix-text);
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+img,
+video {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #080808;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 10px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555555;
+    }
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.foxflix-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+    background: rgba(8, 8, 8, 0.96);
+    border-bottom: 1px solid #202020;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 1000;
+    transition: background var(--foxflix-transition), border-color var(--foxflix-transition);
+}
+
+    .foxflix-header:hover {
+        background: rgba(8, 8, 8, 0.985);
+        border-bottom-color: #292929;
+    }
+
+.foxflix-container {
+    width: 100%;
+    max-width: var(--foxflix-container);
+    height: 100%;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.foxflix-header .foxflix-container {
+    display: flex;
+    align-items: center;
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.foxflix-logo {
+    flex-shrink: 0;
+    color: var(--foxflix-red);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    transition: transform var(--foxflix-transition), filter var(--foxflix-transition), color var(--foxflix-transition);
+}
+
+    .foxflix-logo:hover {
+        color: var(--foxflix-red-hover);
+        transform: scale(1.03);
+        filter: drop-shadow( 0 0 12px rgba(229, 9, 20, 0.35) );
+    }
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.foxflix-nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-left: 45px;
+}
+
+    .foxflix-nav a {
+        position: relative;
+        display: block;
+        color: #d5d5d5;
+        font-size: 14px;
+        white-space: nowrap;
+        transition: color var(--foxflix-transition);
+    }
+
+        .foxflix-nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 0;
+            height: 2px;
+            background: var(--foxflix-red);
+            transition: width var(--foxflix-transition);
+        }
+
+        .foxflix-nav a:hover {
+            color: #ffffff;
+        }
+
+            .foxflix-nav a:hover::after {
+                width: 100%;
+            }
+
+
+/* =========================================================
+   RIGHT ACTIONS
+   ========================================================= */
+
+.foxflix-actions {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-left: auto;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.foxflix-search {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.foxflix-search-icon {
+    width: 17px;
+    height: 17px;
+    display: block;
+    position: relative;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    transition: transform var(--foxflix-transition), border-color var(--foxflix-transition);
+}
+
+    .foxflix-search-icon::after {
+        content: "";
+        position: absolute;
+        width: 7px;
+        height: 2px;
+        right: -5px;
+        bottom: -3px;
+        background: #ffffff;
+        transform: rotate(45deg);
+        border-radius: 2px;
+    }
+
+.foxflix-search:hover .foxflix-search-icon {
+    transform: scale(1.12);
+    border-color: var(--foxflix-red);
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.foxflix-profile {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+    .foxflix-profile:hover {
+        color: #ffffff;
+    }
+
+.foxflix-avatar {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--foxflix-red);
+    font-weight: 700;
+    transition: transform var(--foxflix-transition), box-shadow var(--foxflix-transition);
+}
+
+.foxflix-profile:hover .foxflix-avatar {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.12), 0 0 20px rgba(229, 9, 20, 0.2);
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.foxflix-main {
+    min-height: 100vh;
+    padding-top: 72px;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   GENERAL PAGE
+   ========================================================= */
+
+.foxflix-page {
+    width: 100%;
+    min-height: calc(100vh - 72px);
+    padding: 60px 0 100px;
+}
+
+.foxflix-page-header {
+    margin-bottom: 40px;
+}
+
+    .foxflix-page-header h1 {
+        margin: 8px 0;
+        font-size: 42px;
+        line-height: 1.1;
+        letter-spacing: -1px;
+    }
+
+    .foxflix-page-header p {
+        margin: 0;
+        color: var(--foxflix-secondary);
+        line-height: 1.6;
+    }
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.foxflix-label {
+    color: var(--foxflix-red);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.foxflix-home {
+    background: var(--foxflix-black);
+}
+
+.foxflix-hero {
+    position: relative;
+    min-height: 650px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: #080808;
+}
+
+.foxflix-hero-background {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    transform: scale(1.06);
+    animation: foxflixHeroZoom 12s ease-out forwards;
+}
+
+    .foxflix-hero-background::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient( 90deg, #080808 0%, rgba(8, 8, 8, 0.88) 24%, rgba(8, 8, 8, 0.42) 55%, rgba(8, 8, 8, 0.92) 100% ), linear-gradient( 0deg, #080808 0%, transparent 32%, rgba(8, 8, 8, 0.05) 100% );
+    }
+
+@keyframes foxflixHeroZoom {
+    from {
+        transform: scale(1.06);
+    }
+
+    to {
+        transform: scale(1.02);
+    }
+}
+
+.foxflix-hero::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 180px;
+    background: linear-gradient( to bottom, transparent, #080808 );
+    pointer-events: none;
+}
+
+.foxflix-hero .foxflix-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+}
+
+.foxflix-hero-content {
+    max-width: 620px;
+    padding-top: 60px;
+    animation: foxflixHeroContent 0.8s ease-out;
+}
+
+@keyframes foxflixHeroContent {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.foxflix-hero-content h1 {
+    margin: 14px 0 18px;
+    font-size: 62px;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.foxflix-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+    color: #d0d0d0;
+    font-size: 14px;
+}
+
+.foxflix-hero-content p {
+    max-width: 570px;
+    margin: 0;
+    color: #b8b8b8;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.foxflix-hero-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.foxflix-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 13px 22px;
+    border: 0;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform var(--foxflix-transition), background var(--foxflix-transition), box-shadow var(--foxflix-transition);
+}
+
+    .foxflix-button:hover {
+        transform: translateY(-2px);
+    }
+
+.foxflix-button-primary {
+    background: var(--foxflix-red);
+    color: #ffffff;
+    box-shadow: 0 8px 25px rgba(229, 9, 20, 0.15);
+}
+
+    .foxflix-button-primary:hover {
+        background: var(--foxflix-red-hover);
+        color: #ffffff;
+        box-shadow: 0 12px 30px rgba(229, 9, 20, 0.25);
+    }
+
+.foxflix-button-secondary {
+    background: #303030;
+    color: #ffffff;
+}
+
+    .foxflix-button-secondary:hover {
+        background: #444444;
+        color: #ffffff;
+    }
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.foxflix-section {
+    margin-top: 20px;
+}
+
+.foxflix-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+    .foxflix-section-header h2 {
+        margin: 0;
+    }
+
+    .foxflix-section-header a {
+        color: #aaaaaa;
+        transition: color var(--foxflix-transition);
+    }
+
+        .foxflix-section-header a:hover {
+            color: #ffffff;
+        }
+
+
+/* =========================================================
+   HOME MOVIE ROW
+   ========================================================= */
+
+.foxflix-home-section {
+    padding: 30px 0;
+}
+
+.foxflix-movie-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+}
+
+
+/* =========================================================
+   MOVIE CARDS
+   ========================================================= */
+
+.foxflix-movie-card {
+    display: block;
+    min-width: 0;
+    color: #ffffff;
+    background: transparent;
+    border-radius: var(--foxflix-radius);
+    overflow: hidden;
+    transition: transform var(--foxflix-transition-slow), filter var(--foxflix-transition-slow);
+}
+
+    .foxflix-movie-card:hover {
+        color: #ffffff;
+        transform: translateY(-6px);
+        filter: brightness(1.08);
+    }
+
+    .foxflix-movie-card img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+        border-radius: 5px;
+        background: #181818;
+        transition: transform 0.35s ease, filter 0.35s ease;
+    }
+
+    .foxflix-movie-card:hover img {
+        transform: scale(1.025);
+        filter: brightness(1.08);
+    }
+
+.foxflix-movie-info {
+    padding-top: 12px;
+}
+
+    .foxflix-movie-info h3 {
+        margin: 0 0 5px;
+        font-size: 15px;
+        line-height: 1.3;
+    }
+
+    .foxflix-movie-info p,
+    .foxflix-movie-info span {
+        margin: 0;
+        color: #888888;
+        font-size: 12px;
+    }
+
+
+/* =========================================================
+   STANDARD GRID
+   ========================================================= */
+
+.foxflix-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.foxflix-card {
+    min-width: 0;
+}
+
+.foxflix-card-placeholder {
+    width: 100%;
+    height: 270px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background: linear-gradient( 145deg, #222222, #111111 );
+    color: #555555;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transition: transform var(--foxflix-transition), filter var(--foxflix-transition);
+}
+
+.foxflix-card:hover .foxflix-card-placeholder {
+    transform: scale(1.02);
+    filter: brightness(1.15);
+}
+
+.foxflix-card h3 {
+    margin: 13px 0 5px;
+    font-size: 16px;
+}
+
+.foxflix-card p {
+    margin: 0;
+    color: #888888;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   MY LIST
+   ========================================================= */
+
+.foxflix-movie-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+    .foxflix-movie-grid .foxflix-movie-card {
+        background: #111111;
+        border: 1px solid var(--foxflix-border);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform var(--foxflix-transition), border-color var(--foxflix-transition), background var(--foxflix-transition), box-shadow var(--foxflix-transition);
+    }
+
+        .foxflix-movie-grid .foxflix-movie-card:hover {
+            transform: translateY(-7px);
+            background: #181818;
+            border-color: rgba(229, 9, 20, 0.45);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+        }
+
+.foxflix-movie-poster {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: #090909;
+}
+
+    .foxflix-movie-poster img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: transform 0.4s ease, filter 0.4s ease;
+    }
+
+.foxflix-movie-grid
+.foxflix-movie-card:hover
+.foxflix-movie-poster img {
+    transform: scale(1.04);
+    filter: brightness(1.08);
+}
+
+.foxflix-poster-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--foxflix-red);
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.foxflix-movie-grid .foxflix-movie-info {
+    padding: 15px;
+}
+
+    .foxflix-movie-grid
+    .foxflix-movie-info h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .foxflix-movie-grid
+    .foxflix-movie-info p {
+        margin: 0;
+        color: #8d8d8d;
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+   CONTINUE WATCHING
+   ========================================================= */
+
+.foxflix-continue {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.foxflix-continue-card {
+    overflow: hidden;
+    background: #151515;
+    border-radius: 6px;
+    border: 1px solid #202020;
+    transition: transform var(--foxflix-transition), border-color var(--foxflix-transition);
+}
+
+    .foxflix-continue-card:hover {
+        transform: translateY(-4px);
+        border-color: #333333;
+    }
+
+.foxflix-continue-image {
+    height: 230px;
+    overflow: hidden;
+}
+
+    .foxflix-continue-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--foxflix-transition-slow);
+    }
+
+.foxflix-continue-card:hover
+.foxflix-continue-image img {
+    transform: scale(1.03);
+}
+
+.foxflix-progress {
+    width: 100%;
+    height: 4px;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.foxflix-progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--foxflix-red);
+    transition: width 0.3s ease, background var(--foxflix-transition);
+}
+
+.foxflix-movie-card:hover
+.foxflix-progress-bar {
+    background: var(--foxflix-red-hover);
+}
+
+.foxflix-continue-info {
+    padding: 15px;
+}
+
+    .foxflix-continue-info h3 {
+        margin: 0 0 5px;
+        font-size: 16px;
+    }
+
+    .foxflix-continue-info span {
+        color: #888888;
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
+.foxflix-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.foxflix-filter {
+    border: 1px solid #333333;
+    background: #151515;
+    color: #aaaaaa;
+    padding: 9px 17px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background var(--foxflix-transition), color var(--foxflix-transition), border-color var(--foxflix-transition), transform var(--foxflix-transition);
+}
+
+    .foxflix-filter:hover {
+        transform: translateY(-1px);
+        background: #242424;
+        border-color: #555555;
+        color: #ffffff;
+    }
+
+    .foxflix-filter.active {
+        background: var(--foxflix-red);
+        border-color: var(--foxflix-red);
+        color: #ffffff;
+    }
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.foxflix-search-form {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 800px;
+}
+
+    .foxflix-search-form input {
+        flex: 1;
+        min-width: 0;
+        background: #181818;
+        border: 1px solid #333333;
+        color: #ffffff;
+        padding: 15px 18px;
+        border-radius: 4px;
+        outline: none;
+        transition: border-color var(--foxflix-transition), background var(--foxflix-transition), box-shadow var(--foxflix-transition);
+    }
+
+        .foxflix-search-form input:focus {
+            border-color: #666666;
+            background: #1c1c1c;
+            box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.08);
+        }
+
+    .foxflix-search-form button {
+        flex-shrink: 0;
+        border: none;
+        background: var(--foxflix-red);
+        color: #ffffff;
+        padding: 0 25px;
+        border-radius: 4px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background var(--foxflix-transition), transform var(--foxflix-transition);
+    }
+
+        .foxflix-search-form button:hover {
+            background: var(--foxflix-red-hover);
+            transform: translateY(-1px);
+        }
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.foxflix-empty {
+    margin-top: 60px;
+    padding: 60px 20px;
+    text-align: center;
+    border: 1px solid #222222;
+    background: #101010;
+    border-radius: 6px;
+    animation: foxflixFadeUp 0.4s ease;
+}
+
+    .foxflix-empty h2 {
+        margin-bottom: 10px;
+    }
+
+    .foxflix-empty p {
+        max-width: 550px;
+        margin: 0 auto 25px;
+        color: #888888;
+        line-height: 1.6;
+    }
+
+
+/* =========================================================
+   FAVORITE
+   ========================================================= */
+
+.foxflix-favorite {
+    margin: 25px 0;
+}
+
+    .foxflix-favorite form {
+        display: inline-block;
+    }
+
+
+/* =========================================================
+   VIDEO PLAYER
+   ========================================================= */
+
+.foxflix-video-wrapper {
+    width: 100%;
+    margin-bottom: 35px;
+    background: #000000;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #202020;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+.foxflix-player {
+    display: block;
+    width: 100%;
+    max-height: 720px;
+    background: #000000;
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   MOVIE DETAILS CARD
+   ========================================================= */
+
+.foxflix-page > .foxflix-container > .foxflix-card {
+    padding: 30px;
+    background: #111111;
+    border: 1px solid #202020;
+    border-radius: 10px;
+}
+
+    .foxflix-page > .foxflix-container > .foxflix-card h2 {
+        margin-top: 0;
+        font-size: 28px;
+    }
+
+    .foxflix-page > .foxflix-container > .foxflix-card p {
+        color: #b3b3b3;
+        line-height: 1.7;
+    }
+
+
+/* =========================================================
+   SERIES INDEX
+   ========================================================= */
+
+.series-page {
+    min-height: calc(100vh - 72px);
+    padding: 55px 0 90px;
+    background: var(--foxflix-black);
+}
+
+.series-page-header {
+    margin-bottom: 35px;
+}
+
+.series-page-label {
+    margin-bottom: 9px;
+    color: var(--foxflix-red);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+
+.series-page-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 46px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+}
+
+.series-page-subtitle {
+    max-width: 650px;
+    margin: 12px 0 0;
+    color: #888888;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.series-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.series-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: #111111;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .series-card:hover {
+        transform: translateY(-7px);
+        border-color: rgba(229, 9, 20, 0.4);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+    }
+
+.series-card-poster {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: #181818;
+}
+
+    .series-card-poster img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: transform 0.45s ease, filter 0.45s ease;
+    }
+
+.series-card:hover
+.series-card-poster img {
+    transform: scale(1.045);
+    filter: brightness(1.08);
+}
+
+.series-card-poster::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( to top, rgba(0, 0, 0, 0.7), transparent 45% );
+    opacity: 0.6;
+    pointer-events: none;
+    transition: opacity var(--foxflix-transition);
+}
+
+.series-card:hover
+.series-card-poster::after {
+    opacity: 0.9;
+}
+
+.series-card-info {
+    padding: 14px 14px 16px;
+}
+
+.series-card-title {
+    margin: 0 0 7px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.series-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #777777;
+    font-size: 12px;
+}
+
+.series-card-rating {
+    color: #d5d5d5;
+}
+
+    .series-card-rating::first-letter {
+        color: var(--foxflix-red);
+    }
+
+
+/* =========================================================
+   SERIES DETAILS
+   ========================================================= */
+
+.series-details-page {
+    min-height: calc(100vh - 72px);
+    padding: 38px 0 90px;
+    background: var(--foxflix-black);
+}
+
+
+/* =========================================================
+   DETAILS HERO
+   ========================================================= */
+
+.series-details-hero {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: #0d0d0d;
+    border-radius: 10px;
+    border: 1px solid #1f1f1f;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    animation: foxflixFadeUp 0.55s ease both;
+}
+
+.series-details-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.78;
+    transform: scale(1.015);
+    transition: transform 1s ease;
+}
+
+.series-details-hero:hover
+.series-details-backdrop {
+    transform: scale(1.025);
+}
+
+.series-details-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( 90deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.88) 30%, rgba(0, 0, 0, 0.55) 62%, rgba(0, 0, 0, 0.35) 100% ), linear-gradient( 0deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.4) 48%, transparent 100% );
+}
+
+.series-details-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 760px;
+    padding: 55px;
+}
+
+.series-details-back {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 45px;
+    color: #999999;
+    font-size: 13px;
+    font-weight: 600;
+    transition: color var(--foxflix-transition), transform var(--foxflix-transition);
+}
+
+    .series-details-back:hover {
+        color: #ffffff;
+        transform: translateX(-4px);
+    }
+
+.series-details-label {
+    margin-bottom: 11px;
+    color: var(--foxflix-red);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.6px;
+    text-transform: uppercase;
+}
+
+.series-details-title {
+    margin: 0 0 22px;
+    color: #ffffff;
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -2px;
+    text-shadow: 0 5px 25px rgba(0, 0, 0, 0.45);
+}
+
+.series-details-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 23px;
+}
+
+    .series-details-meta span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 0 11px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.48);
+        color: #c5c5c5;
+        font-size: 12px;
+        backdrop-filter: blur(5px);
+    }
+
+    .series-details-meta
+    .series-details-rating {
+        border-color: rgba(229, 9, 20, 0.5);
+        color: #ffffff;
+    }
+
+.series-details-description {
+    max-width: 650px;
+    margin: 0;
+    color: #b5b5b5;
+    font-size: 15px;
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   DETAILS SEASONS
+   ========================================================= */
+
+.series-details-seasons {
+    padding-top: 55px;
+}
+
+.series-details-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.series-details-section-label {
+    margin-bottom: 6px;
+    color: var(--foxflix-red);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+}
+
+.series-details-section-header h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.series-details-section-header > span {
+    color: #707070;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SEASON CARDS
+   ========================================================= */
+
+.series-details-season-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 13px;
+}
+
+.series-details-season-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 100px;
+    padding: 19px 20px;
+    overflow: hidden;
+    border: 1px solid #242424;
+    border-radius: 7px;
+    background: #111111;
+    color: #ffffff;
+    text-decoration: none;
+    transition: transform var(--foxflix-transition), border-color var(--foxflix-transition), background var(--foxflix-transition), box-shadow var(--foxflix-transition);
+}
+
+    .series-details-season-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--foxflix-red);
+        transform: scaleY(0);
+        transform-origin: center;
+        transition: transform var(--foxflix-transition);
+    }
+
+    .series-details-season-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(229, 9, 20, 0.35);
+        background: #171717;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        color: #ffffff;
+    }
+
+        .series-details-season-card:hover::before {
+            transform: scaleY(1);
+        }
+
+.series-details-season-number {
+    width: 62px;
+    flex-shrink: 0;
+    color: #4f4f4f;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    transition: color var(--foxflix-transition);
+}
+
+.series-details-season-card:hover
+.series-details-season-number {
+    color: var(--foxflix-red);
+}
+
+.series-details-season-info {
+    min-width: 0;
+}
+
+    .series-details-season-info h3 {
+        margin: 0 0 6px;
+        color: #f2f2f2;
+        font-size: 16px;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .series-details-season-info span {
+        color: #707070;
+        font-size: 12px;
+        transition: color var(--foxflix-transition);
+    }
+
+.series-details-season-card:hover
+.series-details-season-info span {
+    color: #bdbdbd;
+}
+
+.series-details-empty {
+    padding: 40px 25px;
+    border: 1px solid #222222;
+    border-radius: 7px;
+    background: #101010;
+    color: #777777;
+    font-size: 14px;
+    text-align: center;
+}
+
+
+/* =========================================================
+   EPISODES PAGE
+   ========================================================= */
+
+.series-episodes-page {
+    min-height: calc(100vh - 72px);
+    padding: 45px 0 90px;
+    background: var(--foxflix-black);
+}
+
+.episodes-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 35px;
+    animation: foxflixFadeUp 0.45s ease both;
+}
+
+.episodes-back {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #858585;
+    font-size: 13px;
+    font-weight: 600;
+    transition: color var(--foxflix-transition), transform var(--foxflix-transition);
+}
+
+    .episodes-back:hover {
+        color: #ffffff;
+        transform: translateX(-4px);
+    }
+
+.episodes-label {
+    margin-bottom: 9px;
+    color: var(--foxflix-red);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+}
+
+.episodes-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -1px;
+}
+
+.episodes-count {
+    flex-shrink: 0;
+    padding: 8px 13px;
+    border: 1px solid #292929;
+    border-radius: 4px;
+    background: #111111;
+    color: #777777;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   EPISODE LIST
+   ========================================================= */
+
+.episodes-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.episode-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 110px;
+    padding: 17px 19px;
+    overflow: hidden;
+    border: 1px solid #242424;
+    border-radius: 7px;
+    background: #111111;
+    transition: transform var(--foxflix-transition), border-color var(--foxflix-transition), background var(--foxflix-transition), box-shadow var(--foxflix-transition);
+    animation: foxflixFadeUp 0.45s ease both;
+}
+
+    .episode-card:nth-child(2) {
+        animation-delay: 0.04s;
+    }
+
+    .episode-card:nth-child(3) {
+        animation-delay: 0.08s;
+    }
+
+    .episode-card:nth-child(4) {
+        animation-delay: 0.12s;
+    }
+
+    .episode-card:nth-child(5) {
+        animation-delay: 0.16s;
+    }
+
+    .episode-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--foxflix-red);
+        transform: scaleY(0);
+        transform-origin: center;
+        transition: transform var(--foxflix-transition);
+    }
+
+    .episode-card:hover {
+        transform: translateX(5px);
+        border-color: rgba(229, 9, 20, 0.35);
+        background: #171717;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
+
+        .episode-card:hover::before {
+            transform: scaleY(1);
+        }
+
+
+/* =========================================================
+   EPISODE NUMBER
+   ========================================================= */
+
+.episode-card-number {
+    width: 64px;
+    flex-shrink: 0;
+    color: #4d4d4d;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    transition: color var(--foxflix-transition);
+}
+
+.episode-card:hover
+.episode-card-number {
+    color: var(--foxflix-red);
+}
+
+
+/* =========================================================
+   EPISODE CONTENT
+   ========================================================= */
+
+.episode-card-main {
+    min-width: 0;
+    flex: 1;
+    padding-right: 25px;
+}
+
+.episode-card-top {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 7px;
+}
+
+.episode-card-title {
+    min-width: 0;
+    margin: 0;
+    color: #f4f4f4;
+    font-size: 17px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.episode-card-duration {
+    flex-shrink: 0;
+    color: #666666;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.episode-card-description {
+    max-width: 780px;
+    margin: 0;
+    color: #858585;
+    font-size: 13px;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   EPISODE PLAY BUTTON
+   ========================================================= */
+
+.episode-card-play {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #383838;
+    border-radius: 50%;
+    background: #1b1b1b;
+    color: #ffffff;
+    text-decoration: none;
+    transition: transform var(--foxflix-transition), background var(--foxflix-transition), border-color var(--foxflix-transition), box-shadow var(--foxflix-transition);
+}
+
+    .episode-card-play span {
+        margin-left: 2px;
+        font-size: 13px;
+    }
+
+    .episode-card-play:hover {
+        transform: scale(1.09);
+        border-color: var(--foxflix-red);
+        background: var(--foxflix-red);
+        color: #ffffff;
+        box-shadow: 0 0 25px rgba(229, 9, 20, 0.28);
+    }
+
+
+/* =========================================================
+   EPISODES EMPTY
+   ========================================================= */
+
+.episodes-empty {
+    padding: 55px 30px;
+    border: 1px solid #222222;
+    border-radius: 7px;
+    background: #101010;
+    text-align: center;
+    animation: foxflixFadeUp 0.4s ease;
+}
+
+.episodes-empty-title {
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.episodes-empty-text {
+    color: #777777;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   WATCH PAGE
+   ========================================================= */
+
+.series-watch-page {
+    min-height: calc(100vh - 72px);
+    padding: 42px 0 90px;
+    background: var(--foxflix-black);
+}
+
+.series-watch-header {
+    max-width: 950px;
+    margin-bottom: 27px;
+    animation: foxflixFadeUp 0.45s ease both;
+}
+
+.series-watch-back {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 24px;
+    color: #858585;
+    font-size: 13px;
+    font-weight: 600;
+    transition: color var(--foxflix-transition), transform var(--foxflix-transition);
+}
+
+    .series-watch-back:hover {
+        color: #ffffff;
+        transform: translateX(-4px);
+    }
+
+.series-watch-label {
+    margin-bottom: 8px;
+    color: var(--foxflix-red);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+}
+
+.series-watch-title {
+    margin: 0 0 14px;
+    color: #ffffff;
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -1px;
+}
+
+.series-watch-description {
+    max-width: 720px;
+    margin: 0;
+    color: #858585;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   SERIES VIDEO
+   ========================================================= */
+
+.series-video-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    background: #000000;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    animation: foxflixVideoReveal 0.6s ease both;
+}
+
+@keyframes foxflixVideoReveal {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.series-video {
+    display: block;
+    width: 100%;
+    max-height: 760px;
+    background: #000000;
+}
+
+
+/* =========================================================
+   WATCH NAVIGATION
+   ========================================================= */
+
+.series-watch-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 18px;
+}
+
+.series-watch-nav-button {
+    min-width: 190px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 14px 17px;
+    border: 1px solid #272727;
+    border-radius: 6px;
+    background: #111111;
+    color: #ffffff;
+    text-decoration: none;
+    transition: transform var(--foxflix-transition), border-color var(--foxflix-transition), background var(--foxflix-transition), box-shadow var(--foxflix-transition);
+}
+
+    .series-watch-nav-button:hover {
+        transform: translateY(-2px);
+        border-color: rgba(229, 9, 20, 0.45);
+        background: #171717;
+        color: #ffffff;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+
+.series-watch-nav-next {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.series-watch-nav-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #343434;
+    border-radius: 50%;
+    background: #1b1b1b;
+    color: var(--foxflix-red);
+    font-size: 16px;
+    transition: background var(--foxflix-transition), color var(--foxflix-transition), border-color var(--foxflix-transition);
+}
+
+.series-watch-nav-button:hover
+.series-watch-nav-icon {
+    background: var(--foxflix-red);
+    border-color: var(--foxflix-red);
+    color: #ffffff;
+}
+
+.series-watch-nav-button
+span:not(.series-watch-nav-icon) {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.series-watch-nav-button small {
+    margin-bottom: 3px;
+    color: #737373;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.foxflix-profile-page {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.foxflix-profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 6px;
+    background: var(--foxflix-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    font-weight: 700;
+}
+
+.foxflix-profile-page h1 {
+    margin: 5px 0;
+}
+
+.foxflix-profile-page p {
+    margin: 0;
+    color: #888888;
+}
+
+.foxflix-profile-menu {
+    width: 100%;
+    max-width: 800px;
+}
+
+.foxflix-profile-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+    border-bottom: 1px solid #242424;
+}
+
+    .foxflix-profile-item span:last-child {
+        color: #777777;
+    }
+
+    .foxflix-profile-item a {
+        color: #ffffff;
+        transition: color var(--foxflix-transition);
+    }
+
+        .foxflix-profile-item a:hover {
+            color: var(--foxflix-red);
+        }
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.foxflix-footer {
+    padding: 40px 0;
+    background: #050505;
+    color: var(--foxflix-secondary);
+}
+
+    .foxflix-footer p {
+        margin: 0;
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes foxflixFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes foxflixFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .foxflix-container {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .foxflix-nav {
+        gap: 18px;
+        margin-left: 30px;
+    }
+
+    .foxflix-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .foxflix-movie-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .foxflix-movie-row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .foxflix-hero-content h1 {
+        font-size: 54px;
+    }
+
+    .series-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .series-details-title {
+        font-size: 52px;
+    }
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .foxflix-container {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+
+    .foxflix-nav {
+        display: none;
+    }
+
+    .foxflix-profile-name {
+        display: none;
+    }
+
+    .foxflix-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .foxflix-movie-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .foxflix-movie-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .foxflix-continue {
+        grid-template-columns: 1fr;
+    }
+
+    .foxflix-hero {
+        min-height: 600px;
+    }
+
+    .foxflix-hero-background {
+        background-position: center center;
+    }
+
+    .foxflix-hero-content {
+        max-width: 560px;
+    }
+
+        .foxflix-hero-content h1 {
+            font-size: 48px;
+        }
+
+    .foxflix-page-header h1 {
+        font-size: 38px;
+    }
+
+    .series-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .series-details-hero {
+        min-height: 560px;
+    }
+
+    .series-details-content {
+        padding: 45px;
+    }
+
+    .series-details-title {
+        font-size: 48px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .foxflix-header {
+        height: 64px;
+    }
+
+    .foxflix-main {
+        padding-top: 64px;
+    }
+
+    .foxflix-container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .foxflix-logo {
+        font-size: 23px;
+    }
+
+    .foxflix-actions {
+        gap: 14px;
+    }
+
+    .foxflix-page {
+        padding: 40px 0 70px;
+    }
+
+    .foxflix-page-header {
+        margin-bottom: 28px;
+    }
+
+        .foxflix-page-header h1 {
+            font-size: 32px;
+        }
+
+    .foxflix-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .foxflix-movie-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 25px;
+    }
+
+        .foxflix-movie-grid
+        .foxflix-movie-info {
+            padding: 11px;
+        }
+
+            .foxflix-movie-grid
+            .foxflix-movie-info h3 {
+                font-size: 14px;
+            }
+
+            .foxflix-movie-grid
+            .foxflix-movie-info p {
+                font-size: 12px;
+            }
+
+    .foxflix-movie-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .foxflix-hero {
+        min-height: 570px;
+    }
+
+    .foxflix-hero-background {
+        background-position: center center;
+        transform: scale(1.04);
+    }
+
+    .foxflix-hero-content {
+        padding-top: 80px;
+        max-width: 100%;
+    }
+
+        .foxflix-hero-content h1 {
+            font-size: 40px;
+            letter-spacing: -1px;
+        }
+
+        .foxflix-hero-content p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+    .foxflix-hero-meta {
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        font-size: 13px;
+    }
+
+    .foxflix-hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 25px;
+    }
+
+    .foxflix-button {
+        width: 100%;
+    }
+
+    .foxflix-search-form {
+        flex-direction: column;
+    }
+
+        .foxflix-search-form button {
+            min-height: 44px;
+            padding: 13px;
+        }
+
+    .foxflix-profile-page {
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .foxflix-profile-avatar {
+        width: 65px;
+        height: 65px;
+        font-size: 25px;
+    }
+
+    .foxflix-video-wrapper {
+        border-radius: 6px;
+    }
+
+    .foxflix-page > .foxflix-container > .foxflix-card {
+        padding: 20px;
+    }
+
+        .foxflix-page > .foxflix-container > .foxflix-card h2 {
+            font-size: 23px;
+        }
+
+    .foxflix-empty {
+        margin-top: 35px;
+        padding: 40px 18px;
+    }
+
+
+    /* =========================================
+       SERIES MOBILE
+       ========================================= */
+
+    .series-page {
+        padding: 38px 0 60px;
+    }
+
+    .series-page-title {
+        font-size: 36px;
+    }
+
+    .series-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .series-card-info {
+        padding: 11px;
+    }
+
+    .series-card-title {
+        font-size: 14px;
+    }
+
+    .series-card-meta {
+        font-size: 11px;
+        gap: 7px;
+    }
+
+
+    /* =========================================
+       SERIES DETAILS MOBILE
+       ========================================= */
+
+    .series-details-page {
+        padding: 25px 0 60px;
+    }
+
+    .series-details-hero {
+        min-height: 540px;
+        border-radius: 7px;
+    }
+
+    .series-details-backdrop {
+        opacity: 0.62;
+    }
+
+    .series-details-overlay {
+        background: linear-gradient( 0deg, rgba(0, 0, 0, 0.99) 0%, rgba(0, 0, 0, 0.82) 48%, rgba(0, 0, 0, 0.25) 100% );
+    }
+
+    .series-details-content {
+        padding: 30px;
+    }
+
+    .series-details-back {
+        margin-bottom: 30px;
+    }
+
+    .series-details-title {
+        font-size: 40px;
+        letter-spacing: -1px;
+    }
+
+    .series-details-description {
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    .series-details-seasons {
+        padding-top: 40px;
+    }
+
+    .series-details-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+        .series-details-section-header h2 {
+            font-size: 26px;
+        }
+
+    .series-details-season-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .series-details-season-number {
+        width: 52px;
+    }
+
+
+    /* =========================================
+       EPISODES MOBILE
+       ========================================= */
+
+    .series-episodes-page {
+        padding: 30px 0 60px;
+    }
+
+    .episodes-top {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .episodes-title {
+        font-size: 34px;
+    }
+
+    .episodes-count {
+        padding: 7px 11px;
+    }
+
+    .episode-card {
+        min-height: 96px;
+        padding: 15px;
+    }
+
+    .episode-card-number {
+        width: 48px;
+        font-size: 19px;
+    }
+
+    .episode-card-main {
+        padding-right: 10px;
+    }
+
+    .episode-card-title {
+        font-size: 15px;
+    }
+
+    .episode-card-description {
+        font-size: 12px;
+    }
+
+    .episode-card-duration {
+        display: none;
+    }
+
+    .episode-card-play {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    /* =========================================
+       WATCH MOBILE
+       ========================================= */
+
+    .series-watch-page {
+        padding: 28px 0 60px;
+    }
+
+    .series-watch-title {
+        font-size: 29px;
+    }
+
+    .series-video-wrapper {
+        border-radius: 6px;
+    }
+
+    .series-watch-navigation {
+        gap: 10px;
+    }
+
+    .series-watch-nav-button {
+        min-width: 0;
+        flex: 1;
+        padding: 11px;
+    }
+
+    .series-watch-nav-icon {
+        width: 29px;
+        height: 29px;
+        font-size: 14px;
+    }
+
+    .series-watch-nav-button
+    span:not(.series-watch-nav-icon) {
+        font-size: 11px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .foxflix-container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .foxflix-logo {
+        font-size: 21px;
+    }
+
+    .foxflix-movie-grid {
+        gap: 10px;
+    }
+
+    .foxflix-movie-row {
+        gap: 10px;
+    }
+
+    .foxflix-hero-content h1 {
+        font-size: 34px;
+    }
+
+    .foxflix-page-header h1 {
+        font-size: 28px;
+    }
+
+    .series-page-title {
+        font-size: 31px;
+    }
+
+    .series-grid {
+        gap: 9px;
+    }
+
+    .series-card-info {
+        padding: 9px;
+    }
+
+    .series-card-title {
+        font-size: 13px;
+    }
+
+    .series-details-content {
+        padding: 23px;
+    }
+
+    .series-details-title {
+        font-size: 34px;
+    }
+
+    .series-details-meta {
+        gap: 6px;
+    }
+
+        .series-details-meta span {
+            min-height: 28px;
+            padding: 0 8px;
+            font-size: 11px;
+        }
+
+    .series-watch-navigation {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .series-watch-nav-button {
+        width: 100%;
+    }
+
+    .series-watch-nav-next {
+        justify-content: space-between;
+        text-align: left;
+    }
+}
+
+
+/* =========================================================
+   LANDSCAPE MOBILE
+   ========================================================= */
+
+@media (max-height: 500px) and (orientation: landscape) {
+
+    .foxflix-header {
+        height: 58px;
+    }
+
+    .foxflix-main {
+        padding-top: 58px;
+    }
+
+    .foxflix-hero {
+        min-height: 470px;
+    }
+
+    .series-details-hero {
+        min-height: 470px;
+    }
+
+    .series-details-content {
+        padding: 30px;
+    }
+
+    .series-details-title {
+        font-size: 38px;
+    }
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1600px) {
+
+    .foxflix-container {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .foxflix-movie-row {
+        gap: 22px;
+    }
+
+    .foxflix-movie-grid {
+        gap: 26px;
+    }
+
+    .series-grid {
+        gap: 22px;
+    }
+
+    .series-details-hero {
+        min-height: 650px;
+    }
+
+    .series-details-title {
+        font-size: 66px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+/* =========================================
+   FOXFLIX — REGISTER PAGE
+========================================= */
+
+.register-page {
+    --register-red: #e50914;
+    --register-red-hover: #ff1823;
+    --register-bg: #09090b;
+    --register-muted: #96969f;
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 76px);
+    padding: 54px 20px 38px;
+    overflow: hidden;
+    background: var(--register-bg);
+    color: #fff;
+}
+
+.register-background {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background: radial-gradient( ellipse at 50% 0%, rgba(229, 9, 20, 0.19), transparent 52% ), radial-gradient( ellipse at 0% 100%, rgba(90, 20, 30, 0.12), transparent 45% ), #09090b;
+}
+
+.register-overlay {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    opacity: 0.16;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+}
+
+.register-container {
+    width: 100%;
+    max-width: 470px;
+    margin: auto;
+    animation: register-enter 0.55s ease both;
+}
+
+.register-logo {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 30px;
+    color: #fff;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-decoration: none;
+}
+
+    .register-logo span {
+        color: var(--register-red);
+    }
+
+    .register-logo:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+
+.register-card {
+    padding: 38px 38px 30px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+    background: rgba(19, 19, 23, 0.94);
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42), 0 0 50px rgba(229, 9, 20, 0.045);
+    backdrop-filter: blur(18px);
+}
+
+.register-heading {
+    margin-bottom: 30px;
+}
+
+.register-label {
+    display: inline-block;
+    margin-bottom: 13px;
+    color: #ff5861;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.register-heading h1 {
+    margin: 0 0 9px;
+    color: #fff;
+    font-size: 31px;
+    font-weight: 750;
+    letter-spacing: -1px;
+}
+
+.register-heading p {
+    margin: 0;
+    color: var(--register-muted);
+    font-size: 14px;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+}
+
+.register-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+    .register-field label {
+        color: #e7e7eb;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+.register-input-wrapper {
+    display: flex;
+    align-items: center;
+    min-height: 53px;
+    padding: 0 15px;
+    border: 1px solid #33333b;
+    border-radius: 9px;
+    background: #111115;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .register-input-wrapper:focus-within {
+        border-color: var(--register-red);
+        background: #151115;
+        box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.12);
+    }
+
+    .register-input-wrapper.has-value {
+        border-color: #49404a;
+    }
+
+.register-input-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 23px;
+    margin-right: 11px;
+    color: #777780;
+    font-size: 15px;
+}
+
+.register-input-wrapper:focus-within .register-input-icon {
+    color: #ff5861;
+}
+
+.register-input-wrapper input {
+    width: 100%;
+    min-width: 0;
+    padding: 15px 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 13px;
+    box-shadow: none;
+}
+
+    .register-input-wrapper input::placeholder {
+        color: #696971;
+        opacity: 1;
+    }
+
+    .register-input-wrapper input:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+.register-hint {
+    color: #777780;
+    font-size: 11px;
+}
+
+.register-error {
+    color: #ff646c;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.register-validation-summary {
+    color: #ff646c;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+    .register-validation-summary:empty {
+        display: none;
+    }
+
+    .register-validation-summary ul {
+        margin: 0;
+        padding-left: 18px;
+    }
+
+.register-submit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 54px;
+    margin-top: 4px;
+    padding: 0 18px;
+    border: 1px solid var(--register-red);
+    border-radius: 9px;
+    background: var(--register-red);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .register-submit:hover {
+        transform: translateY(-1px);
+        border-color: var(--register-red-hover);
+        background: var(--register-red-hover);
+        box-shadow: 0 8px 28px rgba(229, 9, 20, 0.22);
+    }
+
+    .register-submit:active {
+        transform: translateY(0);
+    }
+
+.register-arrow {
+    font-size: 21px;
+    font-weight: 400;
+    transition: transform 0.2s ease;
+}
+
+.register-submit:hover .register-arrow {
+    transform: translateX(3px);
+}
+
+.register-terms {
+    margin: -5px 0 0;
+    color: #777780;
+    font-size: 11px;
+    line-height: 1.7;
+    text-align: center;
+}
+
+.register-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 29px 0 20px;
+    color: #777780;
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+}
+
+    .register-divider span:first-child,
+    .register-divider span:last-child {
+        height: 1px;
+        flex: 1;
+        background: #303037;
+    }
+
+.register-login {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 49px;
+    padding: 0 15px;
+    border: 1px solid #34343b;
+    border-radius: 9px;
+    color: #ededf0;
+    font-size: 12px;
+    font-weight: 650;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+    .register-login span {
+        color: #ff5861;
+        font-size: 19px;
+    }
+
+    .register-login:hover {
+        border-color: #55505a;
+        background: #1b1b21;
+        color: #fff;
+        text-decoration: none;
+    }
+
+.register-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 25px;
+    color: #686871;
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 2px;
+}
+
+.register-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #e50914;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.65);
+}
+
+@keyframes register-enter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 520px) {
+    .register-page {
+        min-height: calc(100vh - 65px);
+        padding: 32px 14px;
+    }
+
+    .register-logo {
+        margin-bottom: 22px;
+        font-size: 26px;
+    }
+
+    .register-card {
+        padding: 29px 22px 24px;
+        border-radius: 13px;
+    }
+
+    .register-heading h1 {
+        font-size: 27px;
+    }
+
+    .register-heading {
+        margin-bottom: 25px;
+    }
+
+    .register-form {
+        gap: 18px;
+    }
+
+    .register-bottom {
+        font-size: 8px;
+        letter-spacing: 1.4px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .register-container {
+        animation: none;
+    }
+
+    .register-submit,
+    .register-login,
+    .register-input-wrapper {
+        transition: none;
+    }
+}
+/* FOXFLIX — LOGIN PAGE */
+
+.login-container {
+    max-width: 440px;
+}
+
+.login-card .register-heading {
+    margin-bottom: 32px;
+}
+
+.login-card .register-form {
+    gap: 24px;
+}
+
+.login-card .register-submit {
+    margin-top: 5px;
+}
+
+.login-card .register-divider {
+    margin-top: 32px;
+}
+
+.login-card .register-input-wrapper:focus-within {
+    border-color: #e50914;
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.12);
+}
+
+@media (max-width: 520px) {
+    .login-card {
+        padding: 30px 22px 25px;
+    }
+
+        .login-card .register-heading {
+            margin-bottom: 26px;
+        }
+}
+/* =========================================
+   FOXFLIX — LOGOUT BUTTON
+========================================= */
+
+.foxflix-logout-form {
+    display: inline-flex;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.foxflix-logout-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.035);
+    color: #c7c7cf;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.foxflix-logout-icon {
+    flex-shrink: 0;
+    color: #92929d;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.foxflix-logout-button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(229, 9, 20, 0.6);
+    background: rgba(229, 9, 20, 0.1);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(229, 9, 20, 0.1);
+}
+
+    .foxflix-logout-button:hover .foxflix-logout-icon {
+        color: #ff4b55;
+        transform: translateX(2px);
+    }
+
+.foxflix-logout-button:focus-visible {
+    outline: 2px solid #e50914;
+    outline-offset: 3px;
+}
+
+.foxflix-logout-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+    .foxflix-logout-button {
+        min-height: 37px;
+        gap: 6px;
+        padding: 0 10px;
+        font-size: 11px;
+    }
+}
+
+.foxflix-search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.foxflix-search {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+    .foxflix-search:hover {
+        border-color: #e50914;
+    }
+
+.foxflix-search-form {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    width: min(360px, calc(100vw - 32px));
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background: #111;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .45);
+}
+
+    .foxflix-search-form.is-open {
+        display: flex;
+    }
+
+    .foxflix-search-form input {
+        min-width: 0;
+        flex: 1;
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid #333;
+        border-radius: 6px;
+        outline: none;
+        background: #1b1b1b;
+        color: #fff;
+    }
+
+        .foxflix-search-form input:focus {
+            border-color: #e50914;
+        }
+
+    .foxflix-search-form button {
+        height: 40px;
+        padding: 0 13px;
+        border: 0;
+        border-radius: 6px;
+        background: #e50914;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .foxflix-search-form button:hover {
+            background: #bd0811;
+        }

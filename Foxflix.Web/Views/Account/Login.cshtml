@@ -1,0 +1,100 @@
+﻿@model Foxflix.Web.Controllers.AccountController.LoginViewModel
+
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = "_Layout";
+}
+
+<div class="register-page login-page">
+    <div class="register-background"></div>
+    <div class="register-overlay"></div>
+
+    <div class="register-container login-container">
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="register-logo">
+            FOX<span>FLIX</span>
+        </a>
+
+        <div class="register-card login-card">
+            <div class="register-heading">
+                <span class="register-label">WELCOME BACK</span>
+                <h1>Sign in</h1>
+                <p>Pick up where your story left off.</p>
+            </div>
+
+            <form asp-controller="Account"
+                  asp-action="Login"
+                  method="post"
+                  class="register-form">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="register-validation-summary">
+                </div>
+
+                <div class="register-field">
+                    <label asp-for="Email">Email address</label>
+
+                    <div class="register-input-wrapper">
+                        <span class="register-input-icon">✉</span>
+
+                        <input asp-for="Email"
+                               type="email"
+                               autocomplete="email"
+                               placeholder="you@example.com" />
+                    </div>
+
+                    <span asp-validation-for="Email"
+                          class="register-error">
+                    </span>
+                </div>
+
+                <div class="register-field">
+                    <label asp-for="Password">Password</label>
+
+                    <div class="register-input-wrapper">
+                        <span class="register-input-icon">◆</span>
+
+                        <input asp-for="Password"
+                               type="password"
+                               autocomplete="current-password"
+                               placeholder="Enter your password" />
+                    </div>
+
+                    <span asp-validation-for="Password"
+                          class="register-error">
+                    </span>
+                </div>
+
+                <button type="submit" class="register-submit">
+                    <span>Sign in to Foxflix</span>
+                    <span class="register-arrow">→</span>
+                </button>
+            </form>
+
+            <div class="register-divider">
+                <span></span>
+                <span>NEW TO FOXFLIX?</span>
+                <span></span>
+            </div>
+
+            <a asp-controller="Account"
+               asp-action="Register"
+               class="register-login">
+                Create your account
+                <span>→</span>
+            </a>
+        </div>
+
+        <div class="register-bottom">
+            <span class="register-status-dot"></span>
+            YOUR ENTERTAINMENT. YOUR WORLD.
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

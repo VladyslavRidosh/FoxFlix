@@ -1,0 +1,11 @@
+
+**/bin/
+**/obj/
+.vs/
+.git/
+**/MediaStorage/videos/
+**/wwwroot/videos/
+**/node_modules/
+.env
+.env.*
+!.env.example

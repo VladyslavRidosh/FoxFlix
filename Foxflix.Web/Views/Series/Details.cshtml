@@ -1,0 +1,133 @@
+﻿@model Foxflix.Web.Controllers.SeriesController.SeriesDto
+
+@{
+    ViewData["Title"] = Model.Title;
+
+    var seasons =
+        ViewBag.Seasons as List<Foxflix.Web.Controllers.SeriesController.SeasonDto>
+        ?? new List<Foxflix.Web.Controllers.SeriesController.SeasonDto>();
+}
+
+<div class="series-details-page">
+
+    <div class="foxflix-container">
+
+        <section class="series-details-hero">
+
+            @if (!string.IsNullOrWhiteSpace(Model.BackdropUrl))
+            {
+                <img class="series-details-backdrop"
+                     src="@Model.BackdropUrl"
+                     alt="@Model.Title" />
+            }
+
+            <div class="series-details-overlay"></div>
+
+            <div class="series-details-content">
+
+                <a asp-controller="Series"
+                   asp-action="Index"
+                   class="series-details-back">
+                    ← Back to series
+                </a>
+
+                <div class="series-details-label">
+                    Series
+                </div>
+
+                <h1 class="series-details-title">
+                    @Model.Title
+                </h1>
+
+                <div class="series-details-meta">
+
+                    <span>@Model.ReleaseYear</span>
+
+                    <span>@Model.Genre</span>
+
+                    <span>@Model.Country</span>
+
+                    <span>@Model.AgeRating+</span>
+
+                    <span class="series-details-rating">
+                        ★ @Model.Rating.ToString("0.0")
+                    </span>
+
+                </div>
+
+                <p class="series-details-description">
+                    @Model.Description
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="series-details-seasons">
+
+            <div class="series-details-section-header">
+
+                <div>
+                    <div class="series-details-section-label">
+                        Browse
+                    </div>
+
+                    <h2>
+                        Seasons
+                    </h2>
+                </div>
+
+                <span>
+                    @seasons.Count
+                    @(seasons.Count == 1 ? "season" : "seasons")
+                </span>
+
+            </div>
+
+
+            @if (seasons.Any())
+            {
+                <div class="series-details-season-grid">
+
+                    @foreach (var season in seasons)
+                    {
+                        <a asp-controller="Series"
+                           asp-action="Episodes"
+                           asp-route-seriesId="@season.SeriesId"
+                           asp-route-seasonId="@season.Id"
+                           class="series-details-season-card">
+
+                            <div class="series-details-season-number">
+                                @season.SeasonNumber.ToString("00")
+                            </div>
+
+                            <div class="series-details-season-info">
+
+                                <h3>
+                                    @season.Title
+                                </h3>
+
+                                <span>
+                                    View episodes →
+                                </span>
+
+                            </div>
+
+                        </a>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="series-details-empty">
+                    No seasons available yet.
+                </div>
+            }
+
+        </section>
+
+    </div>
+
+</div>

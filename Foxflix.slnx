@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Элементы решения/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Foxflix.API/Foxflix.API.csproj" Id="d8b9ef19-d792-421c-a30c-2cc0ec995050" />
+  <Project Path="Foxflix.Web/Foxflix.Web.csproj" Id="394af36d-eab4-45b7-9bed-1c3a51fa5773" />
+  <Project Path="Foxflix.Infrastructure/Foxflix.Infrastructure.csproj" Id="a993bff7-0a8e-4256-8dd4-cbb6defb4cfa" />
+  <Project Path="Netflix.Application/Foxflix.Application.csproj" Id="142c5105-9774-4272-96f4-160510de773a" />
+  <Project Path="Netflix.Domain/Foxflix.Domain.csproj" Id="9599b3b5-28b2-4d6f-99e0-cf18ed077a94" />
+  <Project Path="Netflix.Tests/Foxflix.Tests.csproj" Id="eed61a9b-3708-4ff0-b7c3-3e7c14216243" />
+</Solution>

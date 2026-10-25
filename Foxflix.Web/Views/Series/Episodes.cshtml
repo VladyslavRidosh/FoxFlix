@@ -1,0 +1,99 @@
+﻿@model List<Foxflix.Web.Controllers.SeriesController.EpisodeDto>
+
+@{
+    ViewData["Title"] = $"{ViewBag.SeriesTitle} — Season {ViewBag.SeasonId}";
+}
+
+<div class="series-episodes-page">
+
+    <div class="foxflix-container">
+
+        <div class="episodes-top">
+
+            <div>
+                <a asp-controller="Series"
+                   asp-action="Details"
+                   asp-route-id="@ViewBag.SeriesId"
+                   class="episodes-back">
+                    ← Back to series
+                </a>
+
+                <div class="episodes-label">
+                    @ViewBag.SeriesTitle
+                </div>
+
+                <h1 class="episodes-title">
+                    Season @ViewBag.SeasonId
+                </h1>
+            </div>
+
+            <div class="episodes-count">
+                @Model.Count episodes
+            </div>
+
+        </div>
+
+
+        @if (!Model.Any())
+        {
+            <div class="episodes-empty">
+                <div class="episodes-empty-title">
+                    No episodes yet
+                </div>
+
+                <div class="episodes-empty-text">
+                    У цьому сезоні поки немає епізодів.
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="episodes-grid">
+
+                @foreach (var episode in Model)
+                {
+                    <article class="episode-card">
+
+                        <div class="episode-card-number">
+                            @episode.EpisodeNumber.ToString("00")
+                        </div>
+
+                        <div class="episode-card-main">
+
+                            <div class="episode-card-top">
+
+                                <h2 class="episode-card-title">
+                                    @episode.Title
+                                </h2>
+
+                                <span class="episode-card-duration">
+                                    @episode.DurationMinutes min
+                                </span>
+
+                            </div>
+
+                            <p class="episode-card-description">
+                                @episode.Description
+                            </p>
+
+                        </div>
+
+                        <a asp-controller="Series"
+   asp-action="Watch"
+   asp-route-seriesId="@ViewBag.SeriesId"
+   asp-route-seasonId="@ViewBag.SeasonId"
+   asp-route-episodeNumber="@episode.EpisodeNumber"
+   class="episode-card-play"
+   aria-label="Play @episode.Title">
+    <span>▶</span>
+</a>
+
+                    </article>
+                }
+
+            </div>
+        }
+
+    </div>
+
+</div>

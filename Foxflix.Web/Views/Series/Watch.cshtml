@@ -1,0 +1,109 @@
+@model Foxflix.Web.Controllers.SeriesController.EpisodeDto
+
+@{
+    var publicApiBaseUrl = (Configuration["ApiSettings:PublicBaseUrl"] ?? Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7283/").TrimEnd('/');
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="series-watch-page">
+
+    <div class="foxflix-container">
+
+        <div class="series-watch-header">
+
+            <a asp-controller="Series"
+               asp-action="Episodes"
+               asp-route-seriesId="@ViewBag.SeriesId"
+               asp-route-seasonId="@ViewBag.SeasonId"
+               class="series-watch-back">
+                ← Back to episodes
+            </a>
+
+            <div class="series-watch-label">
+                @ViewBag.SeriesTitle
+            </div>
+
+            <h1 class="series-watch-title">
+                Episode @Model.EpisodeNumber — @Model.Title
+            </h1>
+
+            <p class="series-watch-description">
+                @Model.Description
+            </p>
+
+        </div>
+
+        <div class="series-video-wrapper">
+
+            <video class="series-video"
+                   controls
+                   preload="metadata">
+
+                <source src="@($"{publicApiBaseUrl}/api/seasons/{Model.SeasonId}/episodes/{Model.EpisodeNumber}/stream")"
+                        type="video/mp4" />
+
+                Ваш браузер не підтримує відтворення відео.
+
+            </video>
+
+        </div>
+
+
+        <div class="series-watch-navigation">
+
+            @if (ViewBag.PreviousEpisode != null)
+            {
+                var previousEpisode =
+                    (Foxflix.Web.Controllers.SeriesController.EpisodeDto)
+                    ViewBag.PreviousEpisode;
+
+                <a asp-controller="Series"
+                   asp-action="Watch"
+                   asp-route-seriesId="@ViewBag.SeriesId"
+                   asp-route-seasonId="@ViewBag.SeasonId"
+                   asp-route-episodeNumber="@previousEpisode.EpisodeNumber"
+                   class="series-watch-nav-button">
+
+                    <span class="series-watch-nav-icon">←</span>
+
+                    <span>
+                        <small>Previous</small>
+                        Episode @previousEpisode.EpisodeNumber
+                    </span>
+
+                </a>
+            }
+            else
+            {
+                <div></div>
+            }
+
+
+            @if (ViewBag.NextEpisode != null)
+            {
+                var nextEpisode =
+                    (Foxflix.Web.Controllers.SeriesController.EpisodeDto)
+                    ViewBag.NextEpisode;
+
+                <a asp-controller="Series"
+                   asp-action="Watch"
+                   asp-route-seriesId="@ViewBag.SeriesId"
+                   asp-route-seasonId="@ViewBag.SeasonId"
+                   asp-route-episodeNumber="@nextEpisode.EpisodeNumber"
+                   class="series-watch-nav-button series-watch-nav-next">
+
+                    <span>
+                        <small>Next</small>
+                        Episode @nextEpisode.EpisodeNumber
+                    </span>
+
+                    <span class="series-watch-nav-icon">→</span>
+
+                </a>
+            }
+
+        </div>
+
+    </div>
+
+</div>

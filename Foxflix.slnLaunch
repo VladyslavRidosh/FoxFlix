@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Новый профиль",
+    "Projects": [
+      {
+        "Path": "Foxflix.API\\Foxflix.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Foxflix.Web\\Foxflix.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
